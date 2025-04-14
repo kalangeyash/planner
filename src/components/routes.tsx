@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 
 import { LandingPage } from '@/pages/landing';
@@ -17,48 +17,29 @@ import { DependencyGraph } from '@/pages/dependency-graph';
 import { ProjectDocumentation } from '@/pages/project-documentation';
 import { ProjectHealth } from '@/pages/project-health';
 
-export function Routes() {
-  const [currentPage, setCurrentPage] = useState('landing');
-  const [projectData, setProjectData] = useState<any>(null);
-  const [savedProjects, setSavedProjects] = useState<any[]>([]);
-
-  const pages: Record<string, React.ComponentType<any>> = {
-    landing: LandingPage,
-    form: ProjectForm,
-    roadmap: ProjectRoadmap,
-    architecture: SystemArchitecture,
-    timeline: Timeline,
-    techstack: TechStack,
-    costs: CostBreakdown,
-    team: TeamPlanning,
-    risks: RiskAssessment,
-    dashboard: ProjectDashboard,
-    comparison: ProjectComparison,
-    resources: ResourceAllocation,
-    dependencies: DependencyGraph,
-    documentation: ProjectDocumentation,
-    health: ProjectHealth,
-  };
-
-  const CurrentPage = pages[currentPage];
-
+export function AppRoutes() {
   return (
-    <AnimatePresence mode="wait">
-      <div key={currentPage} className="w-full">
-        {CurrentPage ? (
-          <CurrentPage
-            onNavigate={setCurrentPage}
-            projectData={projectData}
-            setProjectData={setProjectData}
-            savedProjects={savedProjects}
-            setSavedProjects={setSavedProjects}
-          />
-        ) : (
-          <div className="p-10 text-center text-red-600 font-semibold">
-            Page not found: {currentPage}
-          </div>
-        )}
-      </div>
-    </AnimatePresence>
+    <Router>
+      <AnimatePresence mode="wait">
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/form" element={<ProjectForm />} />
+          <Route path="/roadmap" element={<ProjectRoadmap />} />
+          <Route path="/architecture" element={<SystemArchitecture />} />
+          <Route path="/timeline" element={<Timeline />} />
+          <Route path="/techstack" element={<TechStack />} />
+          <Route path="/costs" element={<CostBreakdown />} />
+          <Route path="/team" element={<TeamPlanning />} />
+          <Route path="/risks" element={<RiskAssessment />} />
+          <Route path="/dashboard" element={<ProjectDashboard />} />
+          <Route path="/comparison" element={<ProjectComparison />} />
+          <Route path="/resources" element={<ResourceAllocation />} />
+          <Route path="/dependencies" element={<DependencyGraph />} />
+          <Route path="/documentation" element={<ProjectDocumentation />} />
+          <Route path="/health" element={<ProjectHealth />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </AnimatePresence>
+    </Router>
   );
 }
