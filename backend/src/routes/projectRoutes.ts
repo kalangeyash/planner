@@ -1,5 +1,5 @@
 import express, { Router, Request, Response } from 'express';
-import { Project } from '../models/Project';
+import { Project } from '../models/Project.ts';
 import { RequestHandler, RequestHandlerWithParams } from '../types/express';
 
 const router: Router = express.Router();
