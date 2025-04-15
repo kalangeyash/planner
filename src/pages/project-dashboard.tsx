@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useEffect } from "react";
 import {
   Activity,
   BarChart2,
@@ -37,8 +38,13 @@ export function ProjectDashboard({
   savedProjects: any[];
   setSavedProjects: (projects: any[]) => void;
 }) {
+  useEffect(() => {
+    if (!projectData?.insights?.successMetrics) {
+      onNavigate("form");
+    }
+  }, [projectData, onNavigate]);
+
   if (!projectData?.insights?.successMetrics) {
-    onNavigate("form");
     return null;
   }
 

@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 interface ProjectContextType {
@@ -19,6 +19,35 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
   const navigateTo = (path: string) => {
     navigate(path);
   };
+
+  // Save project data to MongoDB whenever it changes
+  useEffect(() => {
+    const saveProjectData = async () => {
+      if (projectData) {
+        try {
+          const response = await fetch('http://localhost:5000/api/projects/save', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+              projectId: projectData.id || Date.now().toString(),
+              projectData,
+            }),
+          });
+
+          if (!response.ok) {
+            console.error('Failed to save project data');
+          }
+        } catch (error) {
+          console.error('Error saving project data:', error);
+        }
+      }
+    };
+
+    saveProjectData();
+  }, [projectData]);
 
   return (
     <ProjectContext.Provider

@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { useProject } from '@/context/ProjectContext';
+import { PageProps } from '@/types/page-props';
 
 import { LandingPage } from '@/pages/landing';
 import { ProjectForm } from '@/pages/project-form';
@@ -17,11 +18,12 @@ import { ResourceAllocation } from '@/pages/resource-allocation';
 import { DependencyGraph } from '@/pages/dependency-graph';
 import { ProjectDocumentation } from '@/pages/project-documentation';
 import { ProjectHealth } from '@/pages/project-health';
+import { ProjectRestore } from '@/pages/project-restore';
 
 export function AppRoutes() {
   const { projectData, setProjectData, savedProjects, setSavedProjects, navigateTo } = useProject();
 
-  const pageProps = {
+  const pageProps: PageProps = {
     onNavigate: navigateTo,
     projectData,
     setProjectData,
@@ -47,6 +49,7 @@ export function AppRoutes() {
         <Route path="/dependencies" element={<DependencyGraph {...pageProps} />} />
         <Route path="/documentation" element={<ProjectDocumentation {...pageProps} />} />
         <Route path="/health" element={<ProjectHealth {...pageProps} />} />
+        <Route path="/restore" element={<ProjectRestore {...pageProps} />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </AnimatePresence>

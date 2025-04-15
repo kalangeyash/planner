@@ -1,6 +1,11 @@
-import express, { Router, Request, Response } from 'express';
+import express, { Router, Request, Response, RequestHandler } from 'express';
 import { Project } from '../models/Project.js';
-import { RequestHandler, RequestHandlerWithParams } from '../types/express.js';
+
+interface ProjectRequest extends Request {
+  params: {
+    projectId: string;
+  };
+}
 
 export const router: Router = express.Router();
 
@@ -15,16 +20,15 @@ const getAllProjects: RequestHandler = async (req: Request, res: Response) => {
 };
 
 // Get a single project
-const getProject: RequestHandlerWithParams<{ id: string }> = async (req: Request<{ id: string }>, res: Response) => {
+const getProject: RequestHandler = async (req: Request, res: Response) => {
   try {
-    const project = await Project.findById(req.params.id);
+    const project = await Project.findOne({ projectId: req.params.projectId });
     if (!project) {
-      res.status(404).json({ message: 'Project not found' });
-      return;
+      return res.status(404).json({ success: false, error: 'Project not found' });
     }
-    res.json(project);
+    res.json({ success: true, project });
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching project', error });
+    res.status(500).json({ success: false, error: 'Failed to retrieve project' });
   }
 };
 
@@ -40,7 +44,7 @@ const createProject: RequestHandler = async (req: Request, res: Response) => {
 };
 
 // Update a project
-const updateProject: RequestHandlerWithParams<{ id: string }> = async (req: Request<{ id: string }>, res: Response) => {
+const updateProject: RequestHandler = async (req: Request, res: Response) => {
   try {
     const project = await Project.findByIdAndUpdate(
       req.params.id,
@@ -58,7 +62,7 @@ const updateProject: RequestHandlerWithParams<{ id: string }> = async (req: Requ
 };
 
 // Delete a project
-const deleteProject: RequestHandlerWithParams<{ id: string }> = async (req: Request<{ id: string }>, res: Response) => {
+const deleteProject: RequestHandler = async (req: Request, res: Response) => {
   try {
     const project = await Project.findByIdAndDelete(req.params.id);
     if (!project) {
@@ -71,9 +75,45 @@ const deleteProject: RequestHandlerWithParams<{ id: string }> = async (req: Requ
   }
 };
 
+// Save project data
+const saveProject: RequestHandler = async (req: Request, res: Response) => {
+  try {
+    const { projectId, projectData } = req.body;
+    
+    const existingProject = await Project.findOne({ projectId });
+    
+    if (existingProject) {
+      existingProject.projectData = projectData;
+      existingProject.updatedAt = new Date();
+      await existingProject.save();
+      res.json({ success: true, message: 'Project updated successfully' });
+    } else {
+      const newProject = new Project({ projectId, projectData });
+      await newProject.save();
+      res.json({ success: true, message: 'Project saved successfully' });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, error: 'Failed to save project' });
+  }
+};
+
+// List all projects
+const listProjects: RequestHandler = async (req: Request, res: Response) => {
+  try {
+    const projects = await Project.find({}, 'projectId createdAt updatedAt');
+    res.json({ success: true, projects });
+  } catch (error) {
+    res.status(500).json({ success: false, error: 'Failed to retrieve projects' });
+  }
+};
+
 // Register routes
 router.get('/', getAllProjects);
-router.get('/:id', getProject);
+router.get('/:projectId', getProject);
 router.post('/', createProject);
 router.put('/:id', updateProject);
 router.delete('/:id', deleteProject);
+router.post('/save', saveProject);
+router.get('/', listProjects);
+
+export default router;
