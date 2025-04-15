@@ -8,6 +8,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useEffect, useRef } from "react";
+import mermaid from "mermaid";
 
 export function SystemArchitecture({
   onNavigate,
@@ -16,6 +18,35 @@ export function SystemArchitecture({
   onNavigate: (page: string) => void;
   projectData: any;
 }) {
+  const mermaidRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: "default",
+      securityLevel: "loose",
+      flowchart: {
+        useMaxWidth: true,
+        htmlLabels: true,
+        curve: "basis",
+      },
+    });
+  }, []);
+
+  useEffect(() => {
+    if (mermaidRef.current && projectData?.insights?.architecture?.mermaid) {
+      mermaidRef.current.innerHTML = "";
+      mermaid.render(
+        "architecture-diagram",
+        projectData.insights.architecture.mermaid
+      ).then(({ svg }) => {
+        if (mermaidRef.current) {
+          mermaidRef.current.innerHTML = svg;
+        }
+      });
+    }
+  }, [projectData?.insights?.architecture?.mermaid]);
+
   if (!projectData?.insights?.architecture) {
     onNavigate("form");
     return null;
@@ -51,6 +82,27 @@ export function SystemArchitecture({
         </div>
 
         <div className="grid md:grid-cols-2 gap-6">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="col-span-2"
+          >
+            <Card>
+              <CardHeader>
+                <CardTitle>Architecture Diagram</CardTitle>
+                <CardDescription>
+                  Visual representation of the system architecture
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div
+                  ref={mermaidRef}
+                  className="mermaid flex justify-center items-center min-h-[400px]"
+                />
+              </CardContent>
+            </Card>
+          </motion.div>
+
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
