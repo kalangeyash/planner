@@ -1,8 +1,8 @@
 import express, { Router, Request, Response } from 'express';
-import { Project } from '../models/Project.ts';
-import { RequestHandler, RequestHandlerWithParams } from '../types/express';
+import { Project } from '../models/Project.js';
+import { RequestHandler, RequestHandlerWithParams } from '../types/express.js';
 
-const router: Router = express.Router();
+export const router: Router = express.Router();
 
 // Get all projects
 const getAllProjects: RequestHandler = async (req: Request, res: Response) => {
@@ -77,5 +77,3 @@ router.get('/:id', getProject);
 router.post('/', createProject);
 router.put('/:id', updateProject);
 router.delete('/:id', deleteProject);
-
-export default router; 
