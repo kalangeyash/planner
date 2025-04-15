@@ -2,14 +2,17 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { AppRoutes } from '@/components/routes';
 import { Toaster } from '@/components/ui/sonner';
 import { ProjectProvider } from '@/context/ProjectContext';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <ProjectProvider>
-        <AppRoutes />
-        <Toaster />
-      </ProjectProvider>
+      <Router>
+        <ProjectProvider>
+          <AppRoutes />
+          <Toaster />
+        </ProjectProvider>
+      </Router>
     </ThemeProvider>
   );
 }

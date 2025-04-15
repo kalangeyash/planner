@@ -1,7 +1,8 @@
 import express from 'express';
 import cors from 'cors';
-import { connectDB } from './db.ts';
-import projectRoutes from './routes/projectRoutes.ts';
+import { connectDB } from './db';
+import { router as projectRoutes } from './routes/projectRoutes';
+
 
 const app = express();
 const PORT = process.env.PORT || 5000;
