@@ -25,7 +25,7 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
     const saveProjectData = async () => {
       if (projectData) {
         try {
-          const response = await fetch('http://localhost:5000/api/projects/save', {
+          const response = await fetch('http://localhost:5001/api/projects/save', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

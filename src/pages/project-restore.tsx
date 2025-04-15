@@ -11,7 +11,7 @@ export function ProjectRestore({ onNavigate, projectData, setProjectData, savedP
 
   const handleRestore = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/projects/${projectId}`);
+      const response = await fetch(`http://localhost:5001/api/projects/${projectId}`);
       const data = await response.json();
 
       if (data.success) {
