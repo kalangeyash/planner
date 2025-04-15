@@ -7,6 +7,7 @@ import {
   CheckCircle,
   Clock,
   Code2,
+  Copy,
   Download,
   FileText,
   GitBranch,
@@ -81,6 +82,13 @@ export function ProjectDashboard({
     URL.revokeObjectURL(url);
 
     toast.success("Project exported successfully");
+  };
+
+  const handleCopyProjectId = () => {
+    if (projectData?.projectId) {
+      navigator.clipboard.writeText(projectData.projectId);
+      toast.success("Project ID copied to clipboard");
+    }
   };
 
   // Calculate project metrics
@@ -184,30 +192,30 @@ export function ProjectDashboard({
       icon: Activity,
       route: "risks",
     },
-    {
-      title: "Resource Allocation",
-      description: "Resource distribution",
-      icon: GitBranch,
-      route: "resources",
-    },
-    {
-      title: "Documentation",
-      description: "Project documentation",
-      icon: FileText,
-      route: "documentation",
-    },
+    // {
+    //   title: "Resource Allocation",
+    //   description: "Resource distribution",
+    //   icon: GitBranch,
+    //   route: "resources",
+    // },
+    // {
+    //   title: "Documentation",
+    //   description: "Project documentation",
+    //   icon: FileText,
+    //   route: "documentation",
+    // },
     {
       title: "Project Health",
       description: "Health monitoring",
       icon: CheckCircle,
       route: "health",
     },
-    {
-      title: "Analytics",
-      description: "Project analytics and insights",
-      icon: LineChart,
-      route: "analytics",
-    },
+    // {
+    //   title: "Analytics",
+    //   description: "Project analytics and insights",
+    //   icon: LineChart,
+    //   route: "analytics",
+    // },
     {
       title: "Project Comparison",
       description: "Compare with other projects",
@@ -224,23 +232,39 @@ export function ProjectDashboard({
         exit={{ opacity: 0 }}
         className="container py-10"
       >
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold mb-2">Project Dashboard</h1>
-            <p className="text-muted-foreground">
-              Overview and management for {projectData.name}
-            </p>
+            <h1 className="text-3xl font-bold">{projectData.name}</h1>
+            <p className="text-muted-foreground mt-2">{projectData.description}</p>
           </div>
-          <div className="flex gap-4">
-            <Button variant="outline" onClick={handleSaveProject}>
-              <Save className="h-4 w-4 mr-2" />
-              Save Project
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleCopyProjectId}
+              className="flex items-center gap-2"
+            >
+              <Copy className="h-4 w-4" />
+              Copy Project ID
             </Button>
-            <Button variant="outline" onClick={handleExportProject}>
-              <Download className="h-4 w-4 mr-2" />
-              Export Project
+            {/* <Button
+              variant="outline"
+              size="sm"
+              onClick={handleSaveProject}
+              className="flex items-center gap-2"
+            >
+              <Save className="h-4 w-4" />
+              Save for Comparison
+            </Button> */}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleExportProject}
+              className="flex items-center gap-2"
+            >
+              <Download className="h-4 w-4" />
+              Export
             </Button>
-            <Button onClick={() => onNavigate("form")}>New Project</Button>
           </div>
         </div>
 
