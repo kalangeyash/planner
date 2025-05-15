@@ -12,13 +12,29 @@ export type ProjectData = {
   industry: string;
   budget: number;
 };
+
 export async function generateProjectInsights(data: ProjectData) {
   const response = await openai.chat.completions.create({
     model: "gpt-4o-mini",
     messages: [
       {
         role: "system",
-        content: "You are an expert software architect and project manager. Analyze the project details and provide comprehensive insights including roadmap, architecture, timeline, tech stack recommendations, cost breakdown, team composition, risk assessment, and success metrics."
+        content: `You are an expert software architect and project manager. Analyze the project details and provide comprehensive insights including roadmap, architecture, timeline, tech stack recommendations, cost breakdown, team composition, risk assessment, and success metrics.
+
+For the architecture section, provide a Mermaid diagram code that visualizes the system architecture. The diagram should:
+1. Use appropriate Mermaid syntax for system architecture
+2. Include all major components and their relationships
+3. Use clear and descriptive labels
+4. Follow Mermaid best practices for readability
+
+Example format for architecture:
+{
+  "architecture": {
+    "components": [...],
+    "relationships": [...],
+    "mermaid": "graph TD\n  A[Component A] --> B[Component B]\n  B --> C[Component C]"
+  }
+}`
       },
       {
         role: "user",
@@ -31,7 +47,11 @@ Budget: $${data.budget}
 Please provide detailed analysis in JSON format with the following structure:
 {
   "roadmap": { "phases": [] },
-  "architecture": { "components": [], "relationships": [] },
+  "architecture": {
+    "components": [],
+    "relationships": [],
+    "mermaid": ""
+  },
   "timeline": { "milestones": [] },
   "techStack": { "frontend": [], "backend": [], "database": [], "devops": [] },
   "costBreakdown": {
