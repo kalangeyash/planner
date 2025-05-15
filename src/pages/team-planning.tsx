@@ -20,7 +20,7 @@ export function TeamPlanning({
 }) {
   useEffect(() => {
     if (!projectData?.insights?.team) {
-      onNavigate('risks');
+      onNavigate('form');
     }
   }, [projectData, onNavigate]);
 
@@ -99,7 +99,7 @@ export function TeamPlanning({
             </CardHeader>
             <CardContent>
               <ul className="space-y-4">
-                {roles?.map((role: any, index: number) => (
+                {roles?.map((role: string, index: number) => (
                   <motion.li
                     key={index}
                     initial={{ opacity: 0, y: 10 }}
@@ -107,18 +107,7 @@ export function TeamPlanning({
                     transition={{ delay: index * 0.1 }}
                     className="border-l-2 border-primary pl-4"
                   >
-                    <h3 className="font-semibold">{role.title}</h3>
-                    <p className="text-sm text-muted-foreground">{role.responsibilities}</p>
-                    <div className="mt-2 flex flex-wrap gap-2">
-                      {role.skills?.map((skill: string, i: number) => (
-                        <span
-                          key={i}
-                          className="px-2 py-1 bg-secondary text-secondary-foreground rounded-full text-xs"
-                        >
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
+                    <h3 className="font-semibold">{role}</h3>
                   </motion.li>
                 ))}
               </ul>
@@ -137,26 +126,22 @@ export function TeamPlanning({
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
-                {structure?.teams?.map((team: any, index: number) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    className="border-l-2 border-primary pl-4"
-                  >
-                    <h3 className="font-semibold">{team.name}</h3>
-                    <p className="text-sm text-muted-foreground mb-2">{team.description}</p>
-                    <div className="space-y-2">
-                      <strong className="text-sm">Members:</strong>
-                      <ul className="list-disc list-inside text-sm text-muted-foreground">
-                        {team.members?.map((member: string, i: number) => (
-                          <li key={i}>{member}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  </motion.div>
-                ))}
+                <div className="border-l-2 border-primary pl-4">
+                  <h3 className="font-semibold mb-2">Teams</h3>
+                  <ul className="list-disc list-inside text-sm text-muted-foreground">
+                    {structure?.teams?.map((team: string, i: number) => (
+                      <li key={i}>{team}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="border-l-2 border-primary pl-4">
+                  <h3 className="font-semibold mb-2">Reporting Structure</h3>
+                  <ul className="list-disc list-inside text-sm text-muted-foreground">
+                    {structure?.reporting?.map((report: string, i: number) => (
+                      <li key={i}>{report}</li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </CardContent>
           </Card>
