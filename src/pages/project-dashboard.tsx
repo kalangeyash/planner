@@ -16,6 +16,7 @@ import {
   Server,
   Target,
   Users,
+  Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,29 +29,32 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
 import { ExportPDFButton } from "@/components/ExportPDFButton";
+import { useProject } from "@/context/ProjectContext";
 
 export function ProjectDashboard({
   onNavigate,
-  projectData,
-  savedProjects,
-  setSavedProjects,
 }: {
   onNavigate: (page: string) => void;
-  projectData: any;
-  savedProjects: any[];
-  setSavedProjects: (projects: any[]) => void;
 }) {
+  const { projectData, savedProjects, setSavedProjects, isLoading } = useProject();
+
   useEffect(() => {
     if (!projectData?.insights?.successMetrics) {
       onNavigate("form");
     }
   }, [projectData, onNavigate]);
 
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+
   if (!projectData?.insights?.successMetrics) {
     return null;
   }
-
-  // const { kpis, milestones, quality } = projectData.insights.successMetrics;
 
   const handleSaveProject = () => {
     const newSavedProjects = [
@@ -86,40 +90,45 @@ export function ProjectDashboard({
   };
 
   const handleCopyProjectId = () => {
-    if (projectData?.projectId) {
-      navigator.clipboard.writeText(projectData.projectId);
+    if (projectData?.id) {
+      navigator.clipboard.writeText(projectData.id);
       toast.success("Project ID copied to clipboard");
     }
   };
 
   // Calculate project metrics
   const calculateProgress = () => {
+    if (!projectData?.insights?.timeline?.milestones) return 0;
     const totalMilestones = projectData.insights.timeline.milestones.length;
     const completedMilestones = Math.floor(Math.random() * totalMilestones);
     return (completedMilestones / totalMilestones) * 100;
   };
 
   const calculateBudgetUsage = () => {
+    if (!projectData?.budget) return 0;
     const totalBudget = projectData.budget;
     const spentBudget = totalBudget * (Math.random() * 0.8 + 0.1);
     return (spentBudget / totalBudget) * 100;
   };
 
   const calculateRiskLevel = () => {
+    if (!projectData?.insights?.risks) return 0;
     const totalRisks =
-      projectData.insights.risks.technical.length +
-      projectData.insights.risks.business.length +
-      projectData.insights.risks.operational.length;
+      (projectData.insights.risks.technical?.length || 0) +
+      (projectData.insights.risks.business?.length || 0) +
+      (projectData.insights.risks.operational?.length || 0);
+    if (totalRisks === 0) return 0;
+    
     const highRisks =
-      projectData.insights.risks.technical.filter(
+      (projectData.insights.risks.technical?.filter(
         (r: any) => r.severity === "High"
-      ).length +
-      projectData.insights.risks.business.filter(
+      ).length || 0) +
+      (projectData.insights.risks.business?.filter(
         (r: any) => r.severity === "High"
-      ).length +
-      projectData.insights.risks.operational.filter(
+      ).length || 0) +
+      (projectData.insights.risks.operational?.filter(
         (r: any) => r.severity === "High"
-      ).length;
+      ).length || 0);
     return (highRisks / totalRisks) * 100;
   };
 
@@ -193,35 +202,23 @@ export function ProjectDashboard({
       icon: Activity,
       route: "risks",
     },
-    // {
-    //   title: "Resource Allocation",
-    //   description: "Resource distribution",
-    //   icon: GitBranch,
-    //   route: "resources",
-    // },
-    // {
-    //   title: "Documentation",
-    //   description: "Project documentation",
-    //   icon: FileText,
-    //   route: "documentation",
-    // },
+    {
+      title: "Resource Allocation",
+      description: "Resource distribution",
+      icon: GitBranch,
+      route: "resources",
+    },
+    {
+      title: "Documentation",
+      description: "Project documentation",
+      icon: FileText,
+      route: "documentation",
+    },
     {
       title: "Project Health",
-      description: "Health monitoring",
+      description: "Project health metrics",
       icon: CheckCircle,
       route: "health",
-    },
-    // {
-    //   title: "Analytics",
-    //   description: "Project analytics and insights",
-    //   icon: LineChart,
-    //   route: "analytics",
-    // },
-    {
-      title: "Project Comparison",
-      description: "Compare with other projects",
-      icon: BarChart2,
-      route: "comparison",
     },
   ];
 
@@ -270,90 +267,40 @@ export function ProjectDashboard({
           </div>
         </div>
 
-        {/* Key Metrics */}
-        <div className="grid md:grid-cols-4 gap-6 mb-8">
+        {/* Project Metrics */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           {metrics.map((metric, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-            >
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="flex items-center gap-2 text-lg">
-                    <metric.icon className="h-5 w-5" />
-                    {metric.title}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <p className="text-2xl font-bold">
-                      {Math.round(metric.value)}%
-                    </p>
-                    <Progress value={metric.value} className={metric.color} />
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
+            <Card key={index}>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  {metric.title}
+                </CardTitle>
+                <metric.icon className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{metric.value.toFixed(1)}%</div>
+                <Progress value={metric.value} className="mt-2" />
+              </CardContent>
+            </Card>
           ))}
         </div>
 
-        {/* Project Overview */}
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Book className="h-5 w-5" />
-              Project Overview
-            </CardTitle>
-            <CardDescription>
-              Key project information and details
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid md:grid-cols-3 gap-6">
-              <div>
-                <h3 className="font-semibold mb-2">Description</h3>
-                <p className="text-muted-foreground">
-                  {projectData.description}
-                </p>
-              </div>
-              <div>
-                <h3 className="font-semibold mb-2">Industry</h3>
-                <p className="text-muted-foreground">{projectData.industry}</p>
-              </div>
-              <div>
-                <h3 className="font-semibold mb-2">Budget</h3>
-                <p className="text-2xl font-bold">
-                  ${projectData.budget.toLocaleString()}
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Navigation Grid */}
-        <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {/* Navigation Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {navigationCards.map((card, index) => (
-            <motion.div
+            <Card
               key={index}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
+              className="cursor-pointer hover:bg-accent transition-colors"
+              onClick={() => onNavigate(card.route)}
             >
-              <Card
-                className="cursor-pointer hover:bg-muted/50 transition-colors"
-                onClick={() => onNavigate(card.route)}
-              >
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-lg">
-                    <card.icon className="h-5 w-5" />
-                    {card.title}
-                  </CardTitle>
-                  <CardDescription>{card.description}</CardDescription>
-                </CardHeader>
-              </Card>
-            </motion.div>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <card.icon className="h-5 w-5" />
+                  {card.title}
+                </CardTitle>
+                <CardDescription>{card.description}</CardDescription>
+              </CardHeader>
+            </Card>
           ))}
         </div>
       </motion.div>
