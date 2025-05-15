@@ -8,6 +8,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useEffect, useRef } from 'react';
+import mermaid from 'mermaid';
+
+mermaid.initialize({
+  startOnLoad: true,
+  theme: 'default',
+  securityLevel: 'loose',
+});
 
 export function SystemArchitecture({
   onNavigate,
@@ -16,6 +24,14 @@ export function SystemArchitecture({
   onNavigate: (page: string) => void;
   projectData: any;
 }) {
+  const mermaidRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (mermaidRef.current) {
+      mermaid.contentLoaded();
+    }
+  }, []);
+
   if (!projectData?.insights?.architecture) {
     onNavigate("form");
     return null;
@@ -102,6 +118,59 @@ export function SystemArchitecture({
               </CardContent>
             </Card>
           </motion.div>
+        </div>
+
+        <div className="mt-8">
+          <Card>
+            <CardHeader>
+              <CardTitle>System Architecture Diagram</CardTitle>
+              <CardDescription>Visual representation of the system components and their interactions</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="mermaid" ref={mermaidRef}>
+                {`
+                  graph TD
+                    subgraph Frontend
+                      A[React/Vite App] --> B[API Gateway]
+                    end
+
+                    subgraph Backend
+                      B --> C[Authentication Service]
+                      B --> D[User Service]
+                      B --> E[Content Service]
+                      B --> F[Analytics Service]
+                    end
+
+                    subgraph Database
+                      G[(PostgreSQL)]
+                    end
+
+                    C --> G
+                    D --> G
+                    E --> G
+                    F --> G
+
+                    subgraph External Services
+                      H[Email Service]
+                      I[Storage Service]
+                    end
+
+                    C --> H
+                    E --> I
+
+                    style A fill:#f9f,stroke:#333,stroke-width:2px
+                    style B fill:#bbf,stroke:#333,stroke-width:2px
+                    style C fill:#bfb,stroke:#333,stroke-width:2px
+                    style D fill:#bfb,stroke:#333,stroke-width:2px
+                    style E fill:#bfb,stroke:#333,stroke-width:2px
+                    style F fill:#bfb,stroke:#333,stroke-width:2px
+                    style G fill:#fbb,stroke:#333,stroke-width:2px
+                    style H fill:#fbf,stroke:#333,stroke-width:2px
+                    style I fill:#fbf,stroke:#333,stroke-width:2px
+                `}
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </motion.div>
     </div>

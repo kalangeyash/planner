@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
+import { ExportPDFButton } from "@/components/ExportPDFButton";
 
 export function ProjectDashboard({
   onNavigate,
@@ -247,15 +248,15 @@ export function ProjectDashboard({
               <Copy className="h-4 w-4" />
               Copy Project ID
             </Button>
-            {/* <Button
+            <Button
               variant="outline"
               size="sm"
               onClick={handleSaveProject}
               className="flex items-center gap-2"
             >
               <Save className="h-4 w-4" />
-              Save for Comparison
-            </Button> */}
+              Save Project
+            </Button>
             <Button
               variant="outline"
               size="sm"
@@ -263,8 +264,9 @@ export function ProjectDashboard({
               className="flex items-center gap-2"
             >
               <Download className="h-4 w-4" />
-              Export
+              Export JSON
             </Button>
+            <ExportPDFButton projectData={projectData} />
           </div>
         </div>
 

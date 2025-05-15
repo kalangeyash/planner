@@ -64,7 +64,7 @@ export function Timeline({
             >
               <Card>
                 <CardHeader>
-                  <CardTitle>{milestone.name}</CardTitle>
+                  <CardTitle>{milestone.milestone}</CardTitle>
                   <CardDescription>{milestone.date}</CardDescription>
                 </CardHeader>
                 <CardContent>

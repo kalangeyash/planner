@@ -66,20 +66,9 @@ export function ProjectRoadmap({
                   <CardDescription>{phase.duration}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  {Array.isArray(phase.activities) &&
-                  phase.activities.length > 0 ? (
-                    <ul className="list-disc list-inside space-y-2">
-                      {phase.activities.map(
-                        (task: string, taskIndex: number) => (
-                          <li key={taskIndex}>{task}</li>
-                        )
-                      )}
-                    </ul>
-                  ) : (
-                    <p className="text-sm text-muted-foreground">
-                      No activities listed for this phase.
-                    </p>
-                  )}
+                  <p className="text-sm text-muted-foreground">
+                    {phase.description}
+                  </p>
                 </CardContent>
               </Card>
             </motion.div>

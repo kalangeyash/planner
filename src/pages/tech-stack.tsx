@@ -16,12 +16,11 @@ export function TechStack({
   projectData: any;
 }) {
   if (!projectData?.insights?.techStack) {
-    onNavigate("costs");
+    onNavigate("form");
     return null;
   }
 
-  const { frontend, backend, database, devops } =
-    projectData.insights.techStack;
+  const { frontend, backend, database, devops } = projectData.insights.techStack;
 
   const categories = [
     { name: "Frontend", items: frontend },
@@ -68,15 +67,12 @@ export function TechStack({
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-4">
-                    {category.items.map((tech: any, techIndex: number) => (
+                    {category.items.map((tech: string, techIndex: number) => (
                       <li
                         key={techIndex}
                         className="border-l-2 border-primary pl-4"
                       >
-                        <h3 className="font-semibold">{tech.name}</h3>
-                        <p className="text-sm text-muted-foreground">
-                          {tech.reason}
-                        </p>
+                        <h3 className="font-semibold">{tech}</h3>
                       </li>
                     ))}
                   </ul>
