@@ -54,8 +54,8 @@ export function ProjectRestore({ onNavigate, projectData, setProjectData, savedP
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <Card className="max-w-md mx-auto">
+    <div className="h-screen w-screen flex justify-center items-center container mx-auto p-4">
+      <Card className="max-w-md mx-auto w-full">
         <CardHeader>
           <CardTitle>Restore Project</CardTitle>
           <CardDescription>Enter your project ID to restore your project data</CardDescription>
