@@ -36,15 +36,16 @@ export function ProjectDashboard({
 }: {
   onNavigate: (page: string) => void;
 }) {
-  const { projectData, savedProjects, setSavedProjects, isLoading } = useProject();
+  const { projectData, savedProjects, setSavedProjects, isLoading, isSaving } = useProject();
 
   useEffect(() => {
-    if (!projectData?.insights?.successMetrics) {
+    if (!isLoading && !isSaving && (!projectData || !projectData.insights)) {
+      console.log('Navigating to form because:', { isLoading, isSaving, hasProjectData: !!projectData, hasInsights: !!projectData?.insights });
       onNavigate("form");
     }
-  }, [projectData, onNavigate]);
+  }, [projectData, isLoading, isSaving, onNavigate]);
 
-  if (isLoading) {
+  if (isLoading || isSaving) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <Loader2 className="h-8 w-8 animate-spin" />
@@ -52,7 +53,8 @@ export function ProjectDashboard({
     );
   }
 
-  if (!projectData?.insights?.successMetrics) {
+  if (!projectData || !projectData.insights) {
+    console.log('No valid project data:', { projectData });
     return null;
   }
 

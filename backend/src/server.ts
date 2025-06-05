@@ -4,7 +4,7 @@ import { connectDB } from './db';
 import projectRoutes from './routes/projects';
 
 const app = express();
-const PORT = process.env.PORT ? parseInt(process.env.PORT) : 5000;
+const PORT = process.env.PORT ? parseInt(process.env.PORT) : 5001;
 
 // CORS configuration
 const corsOptions = {
@@ -18,9 +18,6 @@ const corsOptions = {
 
 // Apply CORS middleware
 app.use(cors(corsOptions));
-
-// Handle preflight requests explicitly
-app.options('*', cors(corsOptions));
 
 // Middleware
 app.use(express.json());
@@ -37,6 +34,12 @@ app.use('/api/projects', projectRoutes);
 // Basic route
 app.get('/', (req, res) => {
   res.json({ message: 'Welcome to the API' });
+});
+
+// Error handling middleware
+app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+  console.error('Server error:', err);
+  res.status(500).json({ success: false, error: 'Internal server error' });
 });
 
 // Start server with error handling

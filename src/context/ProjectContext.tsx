@@ -9,6 +9,7 @@ interface ProjectContextType {
   setSavedProjects: (projects: any[]) => void;
   navigateTo: (path: string) => void;
   isLoading: boolean;
+  isSaving: boolean;
 }
 
 const ProjectContext = createContext<ProjectContextType | undefined>(undefined);
@@ -17,10 +18,13 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
   const [projectData, setProjectData] = useState<any>(null);
   const [savedProjects, setSavedProjects] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const navigate = useNavigate();
 
   const navigateTo = (path: string) => {
-    navigate(path);
+    // Ensure path starts with a forward slash
+    const formattedPath = path.startsWith('/') ? path : `/${path}`;
+    navigate(formattedPath);
   };
 
   // Load saved projects on mount
@@ -42,43 +46,54 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
 
   // Save project data to MongoDB whenever it changes
   useEffect(() => {
-    const saveProjectData = async () => {
-      if (projectData) {
+    const saveProjectData = async (data: any) => {
+      if (!data) return;
+
+      try {
         setIsLoading(true);
-        try {
-          const projectId = projectData.id || Date.now().toString();
-          const response = await fetch('http://localhost:5001/api/projects/save', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              projectId,
-              projectData: {
-                ...projectData,
-                id: projectId,
-                updatedAt: new Date().toISOString(),
-              },
-            }),
-          });
+        const response = await fetch('http://localhost:5001/api/projects/save', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            projectId: data.projectId || 'default',
+            projectData: data
+          }),
+          credentials: 'include'
+        });
 
-          if (!response.ok) {
-            throw new Error('Failed to save project data');
-          }
+        const savedData = await response.json();
 
-          const savedData = await response.json();
-          setProjectData(savedData.projectData);
-          toast.success('Project saved successfully');
-        } catch (error) {
-          console.error('Error saving project data:', error);
-          toast.error('Failed to save project data');
-        } finally {
-          setIsLoading(false);
+        if (!response.ok) {
+          throw new Error(savedData.error || 'Failed to save project data');
         }
+
+        if (!savedData.success) {
+          throw new Error(savedData.error || 'Failed to save project data');
+        }
+
+        setSavedProjects(prev => {
+          const updated = [...prev];
+          const index = updated.findIndex(p => p.projectId === data.projectId);
+          if (index >= 0) {
+            updated[index] = savedData.data;
+          } else {
+            updated.push(savedData.data);
+          }
+          return updated;
+        });
+
+        toast.success('Project data saved successfully');
+      } catch (error) {
+        console.error('Error saving project:', error);
+        toast.error(error instanceof Error ? error.message : 'Failed to save project data');
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    saveProjectData();
+    saveProjectData(projectData);
   }, [projectData]);
 
   return (
@@ -90,6 +105,7 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
         setSavedProjects,
         navigateTo,
         isLoading,
+        isSaving,
       }}
     >
       {children}

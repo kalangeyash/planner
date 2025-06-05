@@ -1,50 +1,84 @@
-import express, { Request, Response } from 'express';
-import { Project } from '../models/Project';
+import express from 'express';
+import Project from '../models/Project';
 
 const router = express.Router();
 
 // Save project data
-router.post('/save', async (req: Request, res: Response) => {
+router.post('/save', async (req, res) => {
   try {
     const { projectId, projectData } = req.body;
-    
-    const existingProject = await Project.findOne({ projectId });
-    
-    if (existingProject) {
-      existingProject.projectData = projectData;
-      existingProject.updatedAt = new Date();
-      await existingProject.save();
-      res.json({ success: true, message: 'Project updated successfully' });
-    } else {
-      const newProject = new Project({ projectId, projectData });
-      await newProject.save();
-      res.json({ success: true, message: 'Project saved successfully' });
+
+    if (!projectId || !projectData) {
+      return res.status(400).json({
+        success: false,
+        error: 'Missing required fields: projectId and projectData'
+      });
     }
+
+    // Update or create project
+    const project = await Project.findOneAndUpdate(
+      { projectId },
+      {
+        projectId,
+        projectData,
+        updatedAt: new Date()
+      },
+      { upsert: true, new: true }
+    );
+
+    res.json({
+      success: true,
+      data: project
+    });
   } catch (error) {
-    res.status(500).json({ success: false, error: 'Failed to save project' });
+    console.error('Error saving project:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to save project data'
+    });
   }
 });
 
 // Get project by ID
-router.get('/:projectId', async (req: Request, res: Response) => {
+router.get('/:projectId', async (req, res) => {
   try {
-    const project = await Project.findOne({ projectId: req.params.projectId });
+    const { projectId } = req.params;
+    const project = await Project.findOne({ projectId });
+
     if (!project) {
-      return res.status(404).json({ success: false, error: 'Project not found' });
+      return res.status(404).json({
+        success: false,
+        error: 'Project not found'
+      });
     }
-    res.json({ success: true, project });
+
+    res.json({
+      success: true,
+      data: project
+    });
   } catch (error) {
-    res.status(500).json({ success: false, error: 'Failed to retrieve project' });
+    console.error('Error fetching project:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch project data'
+    });
   }
 });
 
-// List all projects
-router.get('/', async (req: Request, res: Response) => {
+// Get all projects
+router.get('/', async (req, res) => {
   try {
-    const projects = await Project.find({}, 'projectId createdAt updatedAt');
-    res.json({ success: true, projects });
+    const projects = await Project.find().sort({ updatedAt: -1 });
+    res.json({
+      success: true,
+      data: projects
+    });
   } catch (error) {
-    res.status(500).json({ success: false, error: 'Failed to retrieve projects' });
+    console.error('Error fetching projects:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch projects'
+    });
   }
 });
 
