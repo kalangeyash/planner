@@ -54,14 +54,14 @@ export function SystemArchitecture({
             </p>
           </div>
           <div className="flex gap-4">
-            <Button variant="outline" onClick={() => onNavigate("roadmap")}>
+            {/* <Button variant="outline" onClick={() => onNavigate("roadmap")}>
               Back to Roadmap
             </Button>
             <Button onClick={() => onNavigate("timeline")}>
               View Timeline
               <ChevronRight className="ml-2 h-4 w-4" />
-            </Button>
-            <Button onClick={() => onNavigate("dashboard")}>Dashboard</Button>
+            </Button> */}
+            <Button onClick={() => onNavigate("dashboard")}>Dashboard <ChevronRight className="ml-2 h-4 w-4" /></Button>
           </div>
         </div>
 

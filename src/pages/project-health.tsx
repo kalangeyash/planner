@@ -4,6 +4,7 @@ import {
   AlertTriangle,
   ArrowLeft,
   CheckCircle,
+  ChevronRight,
   Clock,
   DollarSign,
   Users,
@@ -124,10 +125,9 @@ export function ProjectHealth({
               Health monitoring for {projectData.name}
             </p>
           </div>
-          <Button variant="outline" onClick={() => onNavigate("dashboard")}>
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Dashboard
-          </Button>
+
+          <Button onClick={() => onNavigate("dashboard")}>Dashboard <ChevronRight className="ml-2 h-4 w-4" /></Button>
+
         </div>
 
         <div className="grid gap-6">

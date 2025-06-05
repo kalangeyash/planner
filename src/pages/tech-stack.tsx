@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { ChevronRight } from "lucide-react";
 
 export function TechStack({
   onNavigate,
@@ -45,10 +46,10 @@ export function TechStack({
             </p>
           </div>
           <div className="flex gap-4">
-            <Button variant="outline" onClick={() => onNavigate("timeline")}>
+            {/* <Button variant="outline" onClick={() => onNavigate("timeline")}>
               Back to Timeline
-            </Button>
-            <Button onClick={() => onNavigate("dashboard")}>Dashboard</Button>
+            </Button> */}
+            <Button onClick={() => onNavigate("dashboard")}>Dashboard <ChevronRight className="ml-2 h-4 w-4" /></Button>
           </div>
         </div>
 

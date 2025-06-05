@@ -47,7 +47,7 @@ export function CostBreakdown({
           </p>
         </div>
         <div className="flex gap-4">
-          <Button
+          {/* <Button
             variant="outline"
             onClick={() => onNavigate('techstack')}
           >
@@ -58,11 +58,11 @@ export function CostBreakdown({
           >
             View Team Planning
             <ChevronRight className="ml-2 h-4 w-4" />
-          </Button>
+          </Button> */}
           <Button
             onClick={() => onNavigate('dashboard')}
           >
-            Dashboard
+            Dashboard <ChevronRight className="ml-2 h-4 w-4" />
           </Button>
         </div>
       </div>
