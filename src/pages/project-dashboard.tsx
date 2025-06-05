@@ -192,30 +192,30 @@ export function ProjectDashboard({
       icon: BarChart2,
       route: "costs",
     },
-    {
-      title: "Team Planning",
-      description: "Team structure and roles",
-      icon: Users,
-      route: "team",
-    },
+    // {
+    //   title: "Team Planning",
+    //   description: "Team structure and roles",
+    //   icon: Users,
+    //   route: "team",
+    // },
     {
       title: "Risk Assessment",
       description: "Risk analysis and mitigation",
       icon: Activity,
       route: "risks",
     },
-    {
-      title: "Resource Allocation",
-      description: "Resource distribution",
-      icon: GitBranch,
-      route: "resources",
-    },
-    {
-      title: "Documentation",
-      description: "Project documentation",
-      icon: FileText,
-      route: "documentation",
-    },
+    // {
+    //   title: "Resource Allocation",
+    //   description: "Resource distribution",
+    //   icon: GitBranch,
+    //   route: "resources",
+    // },
+    // {
+    //   title: "Documentation",
+    //   description: "Project documentation",
+    //   icon: FileText,
+    //   route: "documentation",
+    // },
     {
       title: "Project Health",
       description: "Project health metrics",
@@ -247,7 +247,7 @@ export function ProjectDashboard({
               <Copy className="h-4 w-4" />
               Copy Project ID
             </Button>
-            <Button
+            {/* <Button
               variant="outline"
               size="sm"
               onClick={handleSaveProject}
@@ -255,7 +255,7 @@ export function ProjectDashboard({
             >
               <Save className="h-4 w-4" />
               Save Project
-            </Button>
+            </Button> */}
             <Button
               variant="outline"
               size="sm"

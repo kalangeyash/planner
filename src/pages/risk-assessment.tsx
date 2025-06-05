@@ -44,17 +44,18 @@ export function RiskAssessment({
           </p>
         </div>
         <div className="flex gap-4">
-          <Button
+          {/* <Button
             variant="outline"
             onClick={() => onNavigate('team')}
           >
             Back to Team
-          </Button>
+          </Button> */}
           <Button
             onClick={() => onNavigate('dashboard')}
           >
-            View Dashboard
+             Dashboard
             <ChevronRight className="ml-2 h-4 w-4" />
+            
           </Button>
         </div>
       </div>

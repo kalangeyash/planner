@@ -39,7 +39,7 @@ export function Timeline({
             </p>
           </div>
           <div className="flex gap-4">
-            <Button
+            {/* <Button
               variant="outline"
               onClick={() => onNavigate("architecture")}
             >
@@ -48,8 +48,8 @@ export function Timeline({
             <Button onClick={() => onNavigate("techstack")}>
               View Tech Stack
               <ChevronRight className="ml-2 h-4 w-4" />
-            </Button>
-            <Button onClick={() => onNavigate("dashboard")}>Dashboard</Button>
+            </Button> */}
+            <Button onClick={() => onNavigate("dashboard")}>Dashboard <ChevronRight className="ml-2 h-4 w-4" /></Button>
           </div>
         </div>
 
