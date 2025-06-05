@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/form";
 import { generateProjectInsights, type ProjectData } from "@/lib/openai";
 import { toast } from "sonner";
+import { useProject } from "@/context/ProjectContext";
 
 const formSchema = z.object({
   name: z.string().min(2, "Project name must be at least 2 characters"),
@@ -34,6 +35,7 @@ export function ProjectForm({
   setProjectData: (data: any) => void;
 }) {
   const [isLoading, setIsLoading] = useState(false);
+  const { isSaving } = useProject();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -54,14 +56,35 @@ export function ProjectForm({
         requirements: values.requirements.split("\n").filter(Boolean),
       };
 
+      // Generate insights
       const insights = await generateProjectInsights(projectData);
-      setProjectData({ ...projectData, insights });
-
+      const updatedProjectData = { 
+        ...projectData, 
+        insights,
+        projectId: Date.now().toString() // Add a unique project ID
+      };
+      
+      // Set project data and wait for it to be saved
+      setProjectData(updatedProjectData);
+      
+      // Wait for the save operation to complete
+      let attempts = 0;
+      const maxAttempts = 50; // 5 seconds maximum wait time
+      
+      while (isSaving && attempts < maxAttempts) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+        attempts++;
+      }
+      
+      if (attempts >= maxAttempts) {
+        throw new Error('Save operation timed out');
+      }
+      
       toast.success("Analysis complete! Viewing dashboard...");
-      onNavigate("dashboard");
+      onNavigate("/dashboard");
     } catch (error) {
-      toast.error("Failed to analyze project. Please try again.");
-      console.error(error);
+      console.error('Form submission error:', error);
+      toast.error(error instanceof Error ? error.message : "Failed to analyze project. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -181,14 +204,14 @@ export function ProjectForm({
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => onNavigate("landing")}
+                onClick={() => onNavigate("/landing")}
               >
                 Back
               </Button>
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => onNavigate("restore")}
+                onClick={() => onNavigate("/restore")}
                 className="flex items-center gap-2"
               >
                 <RotateCcw className="h-4 w-4" />

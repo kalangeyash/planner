@@ -14,12 +14,13 @@ export type ProjectData = {
 };
 
 export async function generateProjectInsights(data: ProjectData) {
-  const response = await openai.chat.completions.create({
-    model: "gpt-4o-mini",
-    messages: [
-      {
-        role: "system",
-        content: `You are an expert software architect and project manager. Analyze the project details and provide comprehensive insights including roadmap, architecture, timeline, tech stack recommendations, cost breakdown, team composition, risk assessment, and success metrics.
+  try {
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content: `You are an expert software architect and project manager. Analyze the project details and provide comprehensive insights including roadmap, architecture, timeline, tech stack recommendations, cost breakdown, team composition, risk assessment, and success metrics.
 
 For the architecture section, provide a Mermaid diagram code that visualizes the system architecture. The diagram should:
 1. Use appropriate Mermaid syntax for system architecture
@@ -35,10 +36,10 @@ Example format for architecture:
     "mermaid": "graph TD\n  A[Component A] --> B[Component B]\n  B --> C[Component C]"
   }
 }`
-      },
-      {
-        role: "user",
-        content: `Project Name: ${data.name}
+        },
+        {
+          role: "user",
+          content: `Project Name: ${data.name}
 Description: ${data.description}
 Requirements: ${data.requirements.join(', ')}
 Industry: ${data.industry}
@@ -76,27 +77,38 @@ Please provide detailed analysis in JSON format with the following structure:
     "quality": []
   }
 }`
+        }
+      ],
+      temperature: 0.7,
+      max_tokens: 2500,
+    });
+
+    const messageContent = response.choices[0]?.message?.content;
+
+    if (!messageContent) {
+      throw new Error('No content received from OpenAI');
+    }
+
+    // Extract JSON from code block if present
+    const match = messageContent.match(/```json\s*([\s\S]+?)\s*```/);
+    const jsonString = match ? match[1] : messageContent;
+
+    try {
+      const insights = JSON.parse(jsonString);
+      
+      // Validate the insights structure
+      if (!insights.architecture || !insights.roadmap || !insights.techStack) {
+        throw new Error('Invalid insights structure: missing required fields');
       }
-    ],
-    temperature: 0.7,
-    max_tokens: 2500,
-  });
-
-  const messageContent = response.choices[0]?.message?.content;
-
-  if (!messageContent) {
-    throw new Error('No content received from OpenAI');
-  }
-
-  // Extract JSON from code block if present
-  const match = messageContent.match(/```json\s*([\s\S]+?)\s*```/);
-  const jsonString = match ? match[1] : messageContent;
-
-  try {
-    return JSON.parse(jsonString);
+      
+      return insights;
+    } catch (error) {
+      console.error('Failed to parse JSON from OpenAI response:', error);
+      console.error('Received content:', messageContent);
+      throw new Error('Invalid JSON structure in OpenAI response');
+    }
   } catch (error) {
-    console.error('Failed to parse JSON from OpenAI response:', error);
-    console.error('Received content:', messageContent);
-    throw new Error('Invalid JSON structure in OpenAI response');
+    console.error('Error generating project insights:', error);
+    throw error;
   }
 }
