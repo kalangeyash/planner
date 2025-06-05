@@ -36,7 +36,7 @@ export function SystemArchitecture({
     return null;
   }
 
-  const { components, relationships } = projectData.insights.architecture;
+  // const { components, relationships } = projectData.insights.architecture;
 
   return (
     <div className="flex items-center justify-center min-h-screen w-screen bg-background">
@@ -61,7 +61,7 @@ export function SystemArchitecture({
               View Timeline
               <ChevronRight className="ml-2 h-4 w-4" />
             </Button> */}
-            <Button onClick={() => onNavigate("dashboard")}>Dashboard <ChevronRight className="ml-2 h-4 w-4" /></Button>
+            <Button onClick={() => onNavigate("dashboard")}>Dashboard <ChevronRight className="ml-2 h-4 w-4" /> </Button>
           </div>
         </div>
 
@@ -125,7 +125,7 @@ export function SystemArchitecture({
             </Card>
           </motion.div>
 
-          <motion.div
+          {/* <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
           >
@@ -149,9 +149,9 @@ export function SystemArchitecture({
                 </ul>
               </CardContent>
             </Card>
-          </motion.div>
+          </motion.div> */}
 
-          <motion.div
+          {/* <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
           >
@@ -175,7 +175,7 @@ export function SystemArchitecture({
                 </ul>
               </CardContent>
             </Card>
-          </motion.div>
+          </motion.div> */}
         </div>
       </motion.div>
     </div>

@@ -17,7 +17,7 @@ export function LandingPage({
             animate={{ opacity: 1, x: 0 }}
             className="flex items-center gap-2"
           >
-            <Brain className="h-6 w-6" />
+          
             <span className="font-bold">AI Software Planner</span>
           </motion.div>
           <ModeToggle />
