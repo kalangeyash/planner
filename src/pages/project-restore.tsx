@@ -31,15 +31,15 @@ export function ProjectRestore({ onNavigate, setProjectData }: PageProps) {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to restore project');
+        throw new Error(data.message || 'Failed to restore project');
       }
 
-      if (!data.success || !data.data) {
+      if (!data.projectData) {
         throw new Error('Invalid project data received');
       }
 
       // Set the project data and navigate to dashboard
-      setProjectData(data.data.projectData);
+      setProjectData(data.projectData);
       toast.success('Project restored successfully');
       onNavigate('/dashboard');
     } catch (err) {
