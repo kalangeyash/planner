@@ -29,7 +29,7 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const loadSavedProjects = async () => {
       try {
-        const response = await fetch('http://localhost:5001/api/projects');
+        const response = await fetch('https://planner-hot9.onrender.com/api/projects');
         if (response.ok) {
           const data = await response.json();
           setSavedProjects(data.projects || []);

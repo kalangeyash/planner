@@ -20,7 +20,7 @@ export function ProjectRestore({ onNavigate, setProjectData }: PageProps) {
       setIsLoading(true);
       setError('');
 
-      const response = await fetch(`http://localhost:5001/api/projects/${projectId}`, {
+      const response = await fetch(`https://planner-hot9.onrender.com/api/projects/${projectId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
