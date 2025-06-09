@@ -43,7 +43,7 @@ router.post('/save', async (req, res) => {
 router.get('/:id', async (req: Request, res: Response) => {
   try {
     console.log('Fetching project with ID:', req.params.id);
-    const project = await Project.findById(req.params.id);
+    const project = await Project.findOne({ projectId: req.params.id });
     if (!project) {
       console.log('Project not found:', req.params.id);
       return res.status(404).json({ message: 'Project not found' });
@@ -84,8 +84,8 @@ router.post('/', async (req: Request, res: Response) => {
 router.put('/:id', async (req: Request, res: Response) => {
   try {
     console.log('Updating project:', req.params.id);
-    const project = await Project.findByIdAndUpdate(
-      req.params.id,
+    const project = await Project.findOneAndUpdate(
+      { projectId: req.params.id },
       req.body,
       { new: true, runValidators: true }
     );
@@ -104,7 +104,7 @@ router.put('/:id', async (req: Request, res: Response) => {
 router.delete('/:id', async (req: Request, res: Response) => {
   try {
     console.log('Deleting project:', req.params.id);
-    const project = await Project.findByIdAndDelete(req.params.id);
+    const project = await Project.findOneAndDelete({ projectId: req.params.id });
     if (!project) {
       console.log('Project not found for deletion:', req.params.id);
       return res.status(404).json({ message: 'Project not found' });
