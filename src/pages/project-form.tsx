@@ -17,7 +17,6 @@ import {
 } from "@/components/ui/form";
 import { generateProjectInsights, type ProjectData } from "@/lib/openai";
 import { toast } from "sonner";
-import { useProject } from "@/context/ProjectContext";
 
 const formSchema = z.object({
   name: z.string().min(2, "Project name must be at least 2 characters"),
@@ -35,7 +34,6 @@ export function ProjectForm({
   setProjectData: (data: any) => void;
 }) {
   const [isLoading, setIsLoading] = useState(false);
-  const { isSaving } = useProject();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -64,21 +62,8 @@ export function ProjectForm({
         projectId: Date.now().toString() // Add a unique project ID
       };
       
-      // Set project data and wait for it to be saved
+      // Set project data
       setProjectData(updatedProjectData);
-      
-      // Wait for the save operation to complete
-      let attempts = 0;
-      const maxAttempts = 50; // 5 seconds maximum wait time
-      
-      while (isSaving && attempts < maxAttempts) {
-        await new Promise(resolve => setTimeout(resolve, 100));
-        attempts++;
-      }
-      
-      if (attempts >= maxAttempts) {
-        throw new Error('Save operation timed out');
-      }
       
       toast.success("Analysis complete! Viewing dashboard...");
       onNavigate("/dashboard");

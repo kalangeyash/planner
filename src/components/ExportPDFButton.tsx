@@ -3,7 +3,6 @@ import { Download } from "lucide-react";
 import { pdf } from '@react-pdf/renderer';
 import { ProjectReportPDF } from "./ProjectReportPDF";
 import { toast } from "sonner";
-import mermaid from 'mermaid';
 
 interface ExportPDFButtonProps {
   projectData: any;

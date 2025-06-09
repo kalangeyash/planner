@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import { AlertTriangle, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';

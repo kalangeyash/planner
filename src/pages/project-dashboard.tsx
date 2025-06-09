@@ -3,16 +3,11 @@ import { useEffect } from "react";
 import {
   Activity,
   BarChart2,
-  Book,
   CheckCircle,
   Clock,
   Code2,
   Copy,
   Download,
-  FileText,
-  GitBranch,
-  LineChart,
-  Save,
   Server,
   Target,
   Users,
@@ -36,16 +31,16 @@ export function ProjectDashboard({
 }: {
   onNavigate: (page: string) => void;
 }) {
-  const { projectData, savedProjects, setSavedProjects, isLoading, isSaving } = useProject();
+  const { projectData, isLoading } = useProject();
 
   useEffect(() => {
-    if (!isLoading && !isSaving && (!projectData || !projectData.insights)) {
-      console.log('Navigating to form because:', { isLoading, isSaving, hasProjectData: !!projectData, hasInsights: !!projectData?.insights });
+    if (!isLoading && (!projectData || !projectData.insights)) {
+      console.log('Navigating to form because:', { isLoading, hasProjectData: !!projectData, hasInsights: !!projectData?.insights });
       onNavigate("form");
     }
-  }, [projectData, isLoading, isSaving, onNavigate]);
+  }, [projectData, isLoading, onNavigate]);
 
-  if (isLoading || isSaving) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <Loader2 className="h-8 w-8 animate-spin" />
@@ -57,15 +52,6 @@ export function ProjectDashboard({
     console.log('No valid project data:', { projectData });
     return null;
   }
-
-  const handleSaveProject = () => {
-    const newSavedProjects = [
-      ...savedProjects,
-      { ...projectData, savedAt: new Date() },
-    ];
-    setSavedProjects(newSavedProjects);
-    toast.success("Project saved for comparison");
-  };
 
   const handleExportProject = () => {
     const exportData = {

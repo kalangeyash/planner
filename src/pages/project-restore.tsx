@@ -1,12 +1,11 @@
 import { useState } from 'react';
-import { useProject } from '@/context/ProjectContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { PageProps } from '@/types/page-props';
 import { toast } from 'sonner';
 
-export function ProjectRestore({ onNavigate, projectData, setProjectData, savedProjects, setSavedProjects }: PageProps) {
+export function ProjectRestore({ onNavigate, setProjectData }: PageProps) {
   const [projectId, setProjectId] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
