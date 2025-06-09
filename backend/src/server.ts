@@ -8,7 +8,7 @@ const PORT = process.env.PORT ? parseInt(process.env.PORT) : 5001;
 
 // CORS configuration
 const corsOptions = {
-  origin: 'http://localhost:5173',
+  origin: ['https://planner-hot9.onrender.com', 'http://localhost:5173'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With'],
   credentials: true,
