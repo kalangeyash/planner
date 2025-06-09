@@ -49,7 +49,7 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
 
       try {
         setIsLoading(true);
-        const response = await fetch('http://localhost:5001/api/projects/save', {
+        const response = await fetch('https://planner-hot9.onrender.com/api/projects/save', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -64,20 +64,16 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
         const savedData = await response.json();
 
         if (!response.ok) {
-          throw new Error(savedData.error || 'Failed to save project data');
-        }
-
-        if (!savedData.success) {
-          throw new Error(savedData.error || 'Failed to save project data');
+          throw new Error(savedData.message || 'Failed to save project data');
         }
 
         setSavedProjects(prev => {
           const updated = [...prev];
           const index = updated.findIndex(p => p.projectId === data.projectId);
           if (index >= 0) {
-            updated[index] = savedData.data;
+            updated[index] = savedData;
           } else {
-            updated.push(savedData.data);
+            updated.push(savedData);
           }
           return updated;
         });
