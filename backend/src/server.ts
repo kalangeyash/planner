@@ -8,19 +8,33 @@ const PORT = process.env.PORT ? parseInt(process.env.PORT) : 5001;
 
 // CORS configuration
 const corsOptions = {
-  origin: ['https://planner-hot9.onrender.com', 'http://localhost:5173'],
+  origin: true, // Allow all origins in development
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With'],
   credentials: true,
   preflightContinue: false,
-  optionsSuccessStatus: 204
+  optionsSuccessStatus: 204,
+  maxAge: 86400 // Cache preflight requests for 24 hours
 };
 
 // Apply CORS middleware
 app.use(cors(corsOptions));
 
+// Add OPTIONS handling for all routes
+app.options('*', cors(corsOptions));
+
 // Middleware
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+
+// Request timeout middleware
+app.use((req, res, next) => {
+  res.setTimeout(30000, () => {
+    console.error('Request timeout');
+    res.status(504).json({ message: 'Request timeout' });
+  });
+  next();
+});
 
 // Connect to MongoDB with error handling
 connectDB().catch(err => {
@@ -39,7 +53,10 @@ app.get('/', (req, res) => {
 // Error handling middleware
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
   console.error('Server error:', err);
-  res.status(500).json({ success: false, error: 'Internal server error' });
+  res.status(500).json({ 
+    message: 'Internal server error',
+    error: process.env.NODE_ENV === 'development' ? err.message : undefined
+  });
 });
 
 // Start server with error handling
@@ -55,4 +72,16 @@ const server = app.listen(PORT, () => {
   } else {
     console.error('Server error:', err);
   }
+});
+
+// Handle uncaught exceptions
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception:', err);
+  process.exit(1);
+});
+
+// Handle unhandled promise rejections
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+  process.exit(1);
 }); 
