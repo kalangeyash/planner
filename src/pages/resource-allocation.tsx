@@ -42,7 +42,6 @@ export function ResourceAllocation({
 
     const { roles } = projectData.insights.team;
     const totalTeamMembers = roles.length;
-    const totalBudget = projectData.budget;
 
     const calculatedResources = [
       {
@@ -119,7 +118,6 @@ export function ResourceAllocation({
   }
 
   const totalTeamMembers = projectData.insights.team.roles.length;
-  const totalBudget = projectData.budget;
 
   return (
     <motion.div
@@ -203,7 +201,7 @@ export function ResourceAllocation({
                     >
                       <div className="flex justify-between mb-2">
                         <span className="font-medium">{type.name}</span>
-                        <span>${(totalBudget * type.budgetShare).toLocaleString()}</span>
+                        <span>${(projectData.budget * type.budgetShare).toLocaleString()}</span>
                       </div>
                       <Progress value={type.budgetShare * 100} className={type.color} />
                     </motion.div>
@@ -279,7 +277,7 @@ export function ResourceAllocation({
                 </div>
                 <div className="space-y-2">
                   <h3 className="font-semibold">Total Budget</h3>
-                  <p className="text-2xl font-bold">${totalBudget.toLocaleString()}</p>
+                  <p className="text-2xl font-bold">${projectData.budget.toLocaleString()}</p>
                 </div>
                 <div className="space-y-2">
                   <h3 className="font-semibold">Project Duration</h3>

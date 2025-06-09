@@ -9,7 +9,6 @@ interface ProjectContextType {
   setSavedProjects: (projects: any[]) => void;
   navigateTo: (path: string) => void;
   isLoading: boolean;
-  isSaving: boolean;
 }
 
 const ProjectContext = createContext<ProjectContextType | undefined>(undefined);
@@ -18,7 +17,6 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
   const [projectData, setProjectData] = useState<any>(null);
   const [savedProjects, setSavedProjects] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
   const navigate = useNavigate();
 
   const navigateTo = (path: string) => {
@@ -105,7 +103,6 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
         setSavedProjects,
         navigateTo,
         isLoading,
-        isSaving,
       }}
     >
       {children}
