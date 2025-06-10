@@ -21,13 +21,15 @@ export function RiskAssessment({
     return null;
   }
 
-  const { technical, business, operational, mitigation } = projectData.insights.risks;
+  const { technical = [], business = [], operational = [], mitigation = [] } = projectData.insights.risks;
 
   const categories = [
-    { name: 'Technical Risks', items: technical, color: 'border-red-500' },
-    { name: 'Business Risks', items: business, color: 'border-yellow-500' },
-    { name: 'Operational Risks', items: operational, color: 'border-orange-500' },
+    { name: 'Technical Risks', items: Array.isArray(technical) ? technical : [], color: 'border-red-500' },
+    { name: 'Business Risks', items: Array.isArray(business) ? business : [], color: 'border-yellow-500' },
+    { name: 'Operational Risks', items: Array.isArray(operational) ? operational : [], color: 'border-orange-500' },
   ];
+
+  const mitigationStrategies = Array.isArray(mitigation) ? mitigation : [];
 
   return (
     <motion.div
@@ -91,7 +93,7 @@ export function RiskAssessment({
                 <div>
                   <h3 className="font-semibold mb-4">Mitigation Strategies</h3>
                   <div className="space-y-4">
-                    {mitigation.map((strategy: string, index: number) => (
+                    {mitigationStrategies.map((strategy: string, index: number) => (
                       <motion.div
                         key={index}
                         initial={{ opacity: 0, y: 20 }}
@@ -102,6 +104,9 @@ export function RiskAssessment({
                         <p className="text-sm text-muted-foreground">{strategy}</p>
                       </motion.div>
                     ))}
+                    {mitigationStrategies.length === 0 && (
+                      <p className="text-sm text-muted-foreground">No mitigation strategies available</p>
+                    )}
                   </div>
                 </div>
               </div>
