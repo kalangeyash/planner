@@ -22,6 +22,30 @@ export async function generateProjectInsights(data: ProjectData) {
           role: "system",
           content: `You are an expert software architect and project manager. Analyze the project details and provide comprehensive insights including roadmap, architecture, timeline, tech stack recommendations, cost breakdown, team composition, risk assessment, and success metrics.
 
+For the roadmap section, provide detailed phases with the following structure for each phase:
+{
+  "phase": "Phase Name",
+  "duration": "X weeks/months",
+  "description": "Overall phase description",
+  "objectives": ["List of specific objectives for this phase"],
+  "deliverables": ["List of concrete deliverables"],
+  "tasks": [
+    {
+      "name": "Task name",
+      "description": "Detailed task description",
+      "duration": "X days/weeks",
+      "dependencies": ["List of tasks this depends on"],
+      "resources": ["Required resources/team members"],
+      "acceptance_criteria": ["List of criteria for task completion"]
+    }
+  ],
+  "risks": ["Phase-specific risks"],
+  "success_criteria": ["How to measure phase success"],
+  "next_steps": ["What needs to be prepared for the next phase"]
+}
+
+
+
 For the architecture section, provide a Mermaid diagram code that visualizes the system architecture. The diagram should:
 1. Use appropriate Mermaid syntax for system architecture
 2. Include all major components and their relationships
@@ -47,7 +71,30 @@ Budget: $${data.budget}
 
 Please provide detailed analysis in JSON format with the following structure:
 {
-  "roadmap": { "phases": [] },
+  "roadmap": { 
+    "phases": [
+      {
+        "phase": "string",
+        "duration": "string",
+        "description": "string",
+        "objectives": ["string"],
+        "deliverables": ["string"],
+        "tasks": [
+          {
+            "name": "string",
+            "description": "string",
+            "duration": "string",
+            "dependencies": ["string"],
+            "resources": ["string"],
+            "acceptance_criteria": ["string"]
+          }
+        ],
+        "risks": ["string"],
+        "success_criteria": ["string"],
+        "next_steps": ["string"]
+      }
+    ]
+  },
   "architecture": {
     "components": [],
     "relationships": [],
