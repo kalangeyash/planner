@@ -10,19 +10,18 @@ import {
   Download,
   Server,
   Target,
-  Users,
+  
   Loader2,
   Home,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+// import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
 import { ExportPDFButton } from "@/components/ExportPDFButton";
 import { useProject } from "@/context/ProjectContext";
@@ -92,67 +91,67 @@ export function ProjectDashboard({
   };
 
   // Calculate project metrics
-  const calculateProgress = () => {
-    if (!projectData?.insights?.timeline?.milestones) return 0;
-    const totalMilestones = projectData.insights.timeline.milestones.length;
-    const completedMilestones = Math.floor(Math.random() * totalMilestones);
-    return (completedMilestones / totalMilestones) * 100;
-  };
+  // const calculateProgress = () => {
+  //   if (!projectData?.insights?.timeline?.milestones) return 0;
+  //   const totalMilestones = projectData.insights.timeline.milestones.length;
+  //   const completedMilestones = Math.floor(Math.random() * totalMilestones);
+  //   return (completedMilestones / totalMilestones) * 100;
+  // };
 
-  const calculateBudgetUsage = () => {
-    if (!projectData?.budget) return 0;
-    const totalBudget = projectData.budget;
-    const spentBudget = totalBudget * (Math.random() * 0.8 + 0.1);
-    return (spentBudget / totalBudget) * 100;
-  };
+  // const calculateBudgetUsage = () => {
+  //   if (!projectData?.budget) return 0;
+  //   const totalBudget = projectData.budget;
+  //   const spentBudget = totalBudget * (Math.random() * 0.8 + 0.1);
+  //   return (spentBudget / totalBudget) * 100;
+  // };
 
-  const calculateRiskLevel = () => {
-    if (!projectData?.insights?.risks) return 0;
-    const totalRisks =
-      (projectData.insights.risks.technical?.length || 0) +
-      (projectData.insights.risks.business?.length || 0) +
-      (projectData.insights.risks.operational?.length || 0);
-    if (totalRisks === 0) return 0;
+  // const calculateRiskLevel = () => {
+  //   if (!projectData?.insights?.risks) return 0;
+  //   const totalRisks =
+  //     (projectData.insights.risks.technical?.length || 0) +
+  //     (projectData.insights.risks.business?.length || 0) +
+  //     (projectData.insights.risks.operational?.length || 0);
+  //   if (totalRisks === 0) return 0;
 
-    const highRisks =
-      (projectData.insights.risks.technical?.filter(
-        (r: any) => r.severity === "High"
-      ).length || 0) +
-      (projectData.insights.risks.business?.filter(
-        (r: any) => r.severity === "High"
-      ).length || 0) +
-      (projectData.insights.risks.operational?.filter(
-        (r: any) => r.severity === "High"
-      ).length || 0);
-    return (highRisks / totalRisks) * 100;
-  };
+  //   const highRisks =
+  //     (projectData.insights.risks.technical?.filter(
+  //       (r: any) => r.severity === "High"
+  //     ).length || 0) +
+  //     (projectData.insights.risks.business?.filter(
+  //       (r: any) => r.severity === "High"
+  //     ).length || 0) +
+  //     (projectData.insights.risks.operational?.filter(
+  //       (r: any) => r.severity === "High"
+  //     ).length || 0);
+  //   return (highRisks / totalRisks) * 100;
+  // };
 
-  const metrics = [
-    {
-      title: "Project Progress",
-      value: calculateProgress(),
-      icon: Clock,
-      color: "bg-blue-500",
-    },
-    {
-      title: "Budget Usage",
-      value: calculateBudgetUsage(),
-      icon: BarChart2,
-      color: "bg-green-500",
-    },
-    {
-      title: "Risk Level",
-      value: calculateRiskLevel(),
-      icon: Activity,
-      color: "bg-red-500",
-    },
-    {
-      title: "Team Utilization",
-      value: 85,
-      icon: Users,
-      color: "bg-purple-500",
-    },
-  ];
+  // const metrics = [
+  //   {
+  //     title: "Project Progress",
+  //     value: calculateProgress(),
+  //     icon: Clock,
+  //     color: "bg-blue-500",
+  //   },
+  //   {
+  //     title: "Budget Usage",
+  //     value: calculateBudgetUsage(),
+  //     icon: BarChart2,
+  //     color: "bg-green-500",
+  //   },
+  //   {
+  //     title: "Risk Level",
+  //     value: calculateRiskLevel(),
+  //     icon: Activity,
+  //     color: "bg-red-500",
+  //   },
+  //   {
+  //     title: "Team Utilization",
+  //     value: 85,
+  //     icon: Users,
+  //     color: "bg-purple-500",
+  //   },
+  // ];
 
   const navigationCards = [
     {
