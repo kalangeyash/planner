@@ -83,9 +83,11 @@ export function ProjectDashboard({
   };
 
   const handleCopyProjectId = () => {
-    if (projectData?.id) {
-      navigator.clipboard.writeText(projectData.id);
+    if (projectData?.projectId) {
+      navigator.clipboard.writeText(projectData.projectId);
       toast.success("Project ID copied to clipboard");
+    } else {
+      toast.error("No project ID available");
     }
   };
 
