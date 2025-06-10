@@ -12,6 +12,7 @@ import {
   Target,
   Users,
   Loader2,
+  Home,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,7 +36,11 @@ export function ProjectDashboard({
 
   useEffect(() => {
     if (!isLoading && (!projectData || !projectData.insights)) {
-      console.log('Navigating to form because:', { isLoading, hasProjectData: !!projectData, hasInsights: !!projectData?.insights });
+      console.log("Navigating to form because:", {
+        isLoading,
+        hasProjectData: !!projectData,
+        hasInsights: !!projectData?.insights,
+      });
       onNavigate("form");
     }
   }, [projectData, isLoading, onNavigate]);
@@ -49,7 +54,7 @@ export function ProjectDashboard({
   }
 
   if (!projectData || !projectData.insights) {
-    console.log('No valid project data:', { projectData });
+    console.log("No valid project data:", { projectData });
     return null;
   }
 
@@ -106,7 +111,7 @@ export function ProjectDashboard({
       (projectData.insights.risks.business?.length || 0) +
       (projectData.insights.risks.operational?.length || 0);
     if (totalRisks === 0) return 0;
-    
+
     const highRisks =
       (projectData.insights.risks.technical?.filter(
         (r: any) => r.severity === "High"
@@ -221,9 +226,20 @@ export function ProjectDashboard({
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-3xl font-bold">{projectData.name}</h1>
-            <p className="text-muted-foreground mt-2">{projectData.description}</p>
+            <p className="text-muted-foreground mt-2">
+              {projectData.description}
+            </p>
           </div>
           <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => onNavigate("/landing")}
+              className="flex items-center gap-2"
+            >
+              <Home className="h-4 w-4" />
+              Back to Home
+            </Button>
             <Button
               variant="outline"
               size="sm"
@@ -266,7 +282,9 @@ export function ProjectDashboard({
                 <metric.icon className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{metric.value.toFixed(1)}%</div>
+                <div className="text-2xl font-bold">
+                  {metric.value.toFixed(1)}%
+                </div>
                 <Progress value={metric.value} className="mt-2" />
               </CardContent>
             </Card>
