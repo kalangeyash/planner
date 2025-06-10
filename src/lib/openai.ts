@@ -20,56 +20,9 @@ export async function generateProjectInsights(data: ProjectData) {
       messages: [
         {
           role: "system",
-          content: `You are an expert software architect and project manager. Analyze the project details and provide comprehensive insights including roadmap, architecture, timeline, tech stack recommendations, cost breakdown, team composition, risk assessment, and success metrics.
+          content: `You are an expert software architect and project manager. Your task is to analyze project details and provide insights in a strict JSON format. Do not include any text before or after the JSON. The response must be a valid JSON object that can be parsed directly.
 
-For the roadmap section, provide detailed phases with the following structure for each phase:
-{
-  "phase": "Phase Name",
-  "duration": "X weeks/months",
-  "description": "Overall phase description",
-  "objectives": ["List of specific objectives for this phase"],
-  "deliverables": ["List of concrete deliverables"],
-  "tasks": [
-    {
-      "name": "Task name",
-      "description": "Detailed task description",
-      "duration": "X days/weeks",
-      "dependencies": ["List of tasks this depends on"],
-      "resources": ["Required resources/team members"],
-      "acceptance_criteria": ["List of criteria for task completion"]
-    }
-  ],
-  "risks": ["Phase-specific risks"],
-  "success_criteria": ["How to measure phase success"],
-  "next_steps": ["What needs to be prepared for the next phase"]
-}
-
-
-
-For the architecture section, provide a Mermaid diagram code that visualizes the system architecture. The diagram should:
-1. Use appropriate Mermaid syntax for system architecture
-2. Include all major components and their relationships
-3. Use clear and descriptive labels
-4. Follow Mermaid best practices for readability
-
-Example format for architecture:
-{
-  "architecture": {
-    "components": [...],
-    "relationships": [...],
-    "mermaid": "graph TD\n  A[Component A] --> B[Component B]\n  B --> C[Component C]"
-  }
-}`
-        },
-        {
-          role: "user",
-          content: `Project Name: ${data.name}
-Description: ${data.description}
-Requirements: ${data.requirements.join(', ')}
-Industry: ${data.industry}
-Budget: $${data.budget}
-
-Please provide detailed analysis in JSON format with the following structure:
+The JSON should follow this exact structure:
 {
   "roadmap": { 
     "phases": [
@@ -96,38 +49,72 @@ Please provide detailed analysis in JSON format with the following structure:
     ]
   },
   "architecture": {
-    "components": [],
-    "relationships": [],
-    "mermaid": ""
+    "components": ["string"],
+    "relationships": ["string"],
+    "mermaid": "string"
   },
-  "timeline": { "milestones": [] },
-  "techStack": { "frontend": [], "backend": [], "database": [], "devops": [] },
+  "timeline": { 
+    "milestones": [
+      {
+        "name": "string",
+        "date": "string",
+        "description": "string"
+      }
+    ] 
+  },
+  "techStack": { 
+    "frontend": ["string"], 
+    "backend": ["string"], 
+    "database": ["string"], 
+    "devops": ["string"] 
+  },
   "costBreakdown": {
-    "development": { "amount": 0, "details": [] },
-    "infrastructure": { "amount": 0, "details": [] },
-    "maintenance": { "amount": 0, "details": [] },
-    "contingency": { "amount": 0, "details": [] }
+    "development": { "amount": number, "details": ["string"] },
+    "infrastructure": { "amount": number, "details": ["string"] },
+    "maintenance": { "amount": number, "details": ["string"] },
+    "contingency": { "amount": number, "details": ["string"] }
   },
   "team": {
-    "roles": [],
-    "structure": { "teams": [], "reporting": [] }
+    "roles": ["string"],
+    "structure": { 
+      "teams": ["string"], 
+      "reporting": ["string"] 
+    }
   },
   "risks": {
-    "technical": [],
-    "business": [],
-    "operational": [],
-    "mitigation": []
+    "technical": ["string"],
+    "business": ["string"],
+    "operational": ["string"],
+    "mitigation": ["string"]
   },
   "successMetrics": {
-    "kpis": [],
-    "milestones": [],
-    "quality": []
+    "kpis": ["string"],
+    "milestones": ["string"],
+    "quality": ["string"]
   }
-}`
+}
+
+For the mermaid diagram in the architecture section, use this format:
+graph TD
+  A[Component A] --> B[Component B]
+  B --> C[Component C]
+
+Remember: Return ONLY the JSON object, no additional text or explanation.`
+        },
+        {
+          role: "user",
+          content: `Project Name: ${data.name}
+Description: ${data.description}
+Requirements: ${data.requirements.join(', ')}
+Industry: ${data.industry}
+Budget: $${data.budget}
+
+Provide the analysis in the specified JSON format.`
         }
       ],
       temperature: 0.7,
-      max_tokens: 2500,
+      max_tokens: 3500,
+      response_format: { type: "json_object" }
     });
 
     const messageContent = response.choices[0]?.message?.content;
@@ -136,12 +123,8 @@ Please provide detailed analysis in JSON format with the following structure:
       throw new Error('No content received from OpenAI');
     }
 
-    // Extract JSON from code block if present
-    const match = messageContent.match(/```json\s*([\s\S]+?)\s*```/);
-    const jsonString = match ? match[1] : messageContent;
-
     try {
-      const insights = JSON.parse(jsonString);
+      const insights = JSON.parse(messageContent);
       
       // Validate the insights structure
       if (!insights.architecture || !insights.roadmap || !insights.techStack) {

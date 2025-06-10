@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import mermaid from "mermaid";
 
 export function SystemArchitecture({
@@ -19,24 +19,67 @@ export function SystemArchitecture({
   projectData: any;
 }) {
   const mermaidRef = useRef<HTMLDivElement>(null);
+  const [diagramError, setDiagramError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (mermaidRef.current) {
-      mermaid.initialize({
-        startOnLoad: true,
-        theme: "default",
-        securityLevel: "loose",
-      });
-      mermaid.contentLoaded();
-    }
+    // Initialize Mermaid with more specific configuration
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: "default",
+      securityLevel: "loose",
+      flowchart: {
+        curve: 'basis',
+        padding: 20,
+      },
+      sequence: {
+        diagramMarginX: 50,
+        diagramMarginY: 10,
+        actorMargin: 50,
+        width: 150,
+        height: 65,
+        boxMargin: 10,
+        boxTextMargin: 5,
+        noteMargin: 10,
+        messageMargin: 35,
+      },
+    });
   }, []);
+
+  useEffect(() => {
+    const renderDiagram = async () => {
+      if (!mermaidRef.current || !projectData?.insights?.architecture?.mermaid) {
+        return;
+      }
+
+      try {
+        // Clear previous content
+        mermaidRef.current.innerHTML = '';
+        
+        // Generate unique ID for this diagram
+        const diagramId = `architecture-diagram-${Date.now()}`;
+        
+        // Render the diagram
+        const { svg } = await mermaid.render(diagramId, projectData.insights.architecture.mermaid);
+        
+        if (mermaidRef.current) {
+          mermaidRef.current.innerHTML = svg;
+          setDiagramError(null);
+        }
+      } catch (error) {
+        console.error('Mermaid rendering error:', error);
+        setDiagramError(error instanceof Error ? error.message : 'Failed to render architecture diagram');
+      }
+    };
+
+    renderDiagram();
+  }, [projectData?.insights?.architecture?.mermaid]);
 
   if (!projectData?.insights?.architecture) {
     onNavigate("form");
     return null;
   }
 
-  // const { components, relationships } = projectData.insights.architecture;
+  const { components, relationships } = projectData.insights.architecture;
 
   return (
     <div className="flex items-center justify-center min-h-screen w-screen bg-background">
@@ -54,14 +97,9 @@ export function SystemArchitecture({
             </p>
           </div>
           <div className="flex gap-4">
-            {/* <Button variant="outline" onClick={() => onNavigate("roadmap")}>
-              Back to Roadmap
+            <Button onClick={() => onNavigate("dashboard")}>
+              Dashboard <ChevronRight className="ml-2 h-4 w-4" />
             </Button>
-            <Button onClick={() => onNavigate("timeline")}>
-              View Timeline
-              <ChevronRight className="ml-2 h-4 w-4" />
-            </Button> */}
-            <Button onClick={() => onNavigate("dashboard")}>Dashboard <ChevronRight className="ml-2 h-4 w-4" /> </Button>
           </div>
         </div>
 
@@ -79,53 +117,24 @@ export function SystemArchitecture({
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="mermaid" ref={mermaidRef}>
-                  {`
-                    graph TD
-                      subgraph Frontend
-                        A[React/Vite App] --> B[API Gateway]
-                      end
-
-                      subgraph Backend
-                        B --> C[Authentication Service]
-                        B --> D[User Service]
-                        B --> E[Content Service]
-                        B --> F[Analytics Service]
-                      end
-
-                      subgraph Database
-                        G[(PostgreSQL)]
-                      end
-
-                      C --> G
-                      D --> G
-                      E --> G
-                      F --> G
-
-                      subgraph External Services
-                        H[Email Service]
-                        I[Storage Service]
-                      end
-
-                      C --> H
-                      E --> I
-
-                      style A fill:#f9f,stroke:#333,stroke-width:2px
-                      style B fill:#bbf,stroke:#333,stroke-width:2px
-                      style C fill:#bfb,stroke:#333,stroke-width:2px
-                      style D fill:#bfb,stroke:#333,stroke-width:2px
-                      style E fill:#bfb,stroke:#333,stroke-width:2px
-                      style F fill:#bfb,stroke:#333,stroke-width:2px
-                      style G fill:#fbb,stroke:#333,stroke-width:2px
-                      style H fill:#fbf,stroke:#333,stroke-width:2px
-                      style I fill:#fbf,stroke:#333,stroke-width:2px
-                  `}
+                <div className="relative border-2 border-border rounded-lg p-4 bg-card">
+                  {diagramError ? (
+                    <div className="text-destructive text-center p-4">
+                      {diagramError}
+                    </div>
+                  ) : (
+                    <div 
+                      ref={mermaidRef} 
+                      className="mermaid overflow-auto max-h-[600px] w-full"
+                      style={{ minHeight: '400px' }}
+                    />
+                  )}
                 </div>
               </CardContent>
             </Card>
           </motion.div>
 
-          {/* <motion.div
+          <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
           >
@@ -138,20 +147,17 @@ export function SystemArchitecture({
               </CardHeader>
               <CardContent>
                 <ul className="space-y-4">
-                  {components.map((component: any, index: number) => (
+                  {components?.map((component: string, index: number) => (
                     <li key={index} className="border-l-2 border-primary pl-4">
-                      <h3 className="font-semibold">{component.name}</h3>
-                      <p className="text-sm text-muted-foreground">
-                        {component.description}
-                      </p>
+                      <h3 className="font-semibold">{component}</h3>
                     </li>
                   ))}
                 </ul>
               </CardContent>
             </Card>
-          </motion.div> */}
+          </motion.div>
 
-          {/* <motion.div
+          <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
           >
@@ -162,20 +168,15 @@ export function SystemArchitecture({
               </CardHeader>
               <CardContent>
                 <ul className="space-y-4">
-                  {relationships.map((rel: any, index: number) => (
+                  {relationships?.map((rel: string, index: number) => (
                     <li key={index} className="border-l-2 border-primary pl-4">
-                      <h3 className="font-semibold">
-                        {rel.from} → {rel.to}
-                      </h3>
-                      <p className="text-sm text-muted-foreground">
-                        {rel.type}
-                      </p>
+                      <h3 className="font-semibold">{rel}</h3>
                     </li>
                   ))}
                 </ul>
               </CardContent>
             </Card>
-          </motion.div> */}
+          </motion.div>
         </div>
       </motion.div>
     </div>
