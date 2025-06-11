@@ -334,7 +334,7 @@ export function ProjectReportPDF({ projectData }: ProjectReportPDFProps) {
             <View style={styles.sectionTitleLine} />
           </View>
           <View style={styles.grid}>
-            {['frontend', 'backend', 'database', 'devops'].map((category) => (
+            {['Development Stack', 'database', 'devops'].map((category) => (
               <View key={category} style={styles.gridItem}>
                 <View style={styles.card}>
                   <View style={styles.cardAccent} />
