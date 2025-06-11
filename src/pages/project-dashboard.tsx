@@ -10,7 +10,6 @@ import {
   Download,
   Server,
   Target,
-  
   Loader2,
   Home,
 } from "lucide-react";
@@ -90,69 +89,6 @@ export function ProjectDashboard({
     }
   };
 
-  // Calculate project metrics
-  // const calculateProgress = () => {
-  //   if (!projectData?.insights?.timeline?.milestones) return 0;
-  //   const totalMilestones = projectData.insights.timeline.milestones.length;
-  //   const completedMilestones = Math.floor(Math.random() * totalMilestones);
-  //   return (completedMilestones / totalMilestones) * 100;
-  // };
-
-  // const calculateBudgetUsage = () => {
-  //   if (!projectData?.budget) return 0;
-  //   const totalBudget = projectData.budget;
-  //   const spentBudget = totalBudget * (Math.random() * 0.8 + 0.1);
-  //   return (spentBudget / totalBudget) * 100;
-  // };
-
-  // const calculateRiskLevel = () => {
-  //   if (!projectData?.insights?.risks) return 0;
-  //   const totalRisks =
-  //     (projectData.insights.risks.technical?.length || 0) +
-  //     (projectData.insights.risks.business?.length || 0) +
-  //     (projectData.insights.risks.operational?.length || 0);
-  //   if (totalRisks === 0) return 0;
-
-  //   const highRisks =
-  //     (projectData.insights.risks.technical?.filter(
-  //       (r: any) => r.severity === "High"
-  //     ).length || 0) +
-  //     (projectData.insights.risks.business?.filter(
-  //       (r: any) => r.severity === "High"
-  //     ).length || 0) +
-  //     (projectData.insights.risks.operational?.filter(
-  //       (r: any) => r.severity === "High"
-  //     ).length || 0);
-  //   return (highRisks / totalRisks) * 100;
-  // };
-
-  // const metrics = [
-  //   {
-  //     title: "Project Progress",
-  //     value: calculateProgress(),
-  //     icon: Clock,
-  //     color: "bg-blue-500",
-  //   },
-  //   {
-  //     title: "Budget Usage",
-  //     value: calculateBudgetUsage(),
-  //     icon: BarChart2,
-  //     color: "bg-green-500",
-  //   },
-  //   {
-  //     title: "Risk Level",
-  //     value: calculateRiskLevel(),
-  //     icon: Activity,
-  //     color: "bg-red-500",
-  //   },
-  //   {
-  //     title: "Team Utilization",
-  //     value: 85,
-  //     icon: Users,
-  //     color: "bg-purple-500",
-  //   },
-  // ];
-
   const navigationCards = [
     {
       title: "Project Roadmap",
@@ -184,30 +120,12 @@ export function ProjectDashboard({
       icon: BarChart2,
       route: "costs",
     },
-    // {
-    //   title: "Team Planning",
-    //   description: "Team structure and roles",
-    //   icon: Users,
-    //   route: "team",
-    // },
     {
       title: "Risk Assessment",
       description: "Risk analysis and mitigation",
       icon: Activity,
       route: "risks",
     },
-    // {
-    //   title: "Resource Allocation",
-    //   description: "Resource distribution",
-    //   icon: GitBranch,
-    //   route: "resources",
-    // },
-    // {
-    //   title: "Documentation",
-    //   description: "Project documentation",
-    //   icon: FileText,
-    //   route: "documentation",
-    // },
     {
       title: "Project Health",
       description: "Project health metrics",
@@ -250,15 +168,6 @@ export function ProjectDashboard({
               <Copy className="h-4 w-4" />
               Copy Project ID
             </Button>
-            {/* <Button
-              variant="outline"
-              size="sm"
-              onClick={handleSaveProject}
-              className="flex items-center gap-2"
-            >
-              <Save className="h-4 w-4" />
-              Save Project
-            </Button> */}
             <Button
               variant="outline"
               size="sm"
@@ -271,26 +180,6 @@ export function ProjectDashboard({
             <ExportPDFButton projectData={projectData} />
           </div>
         </div>
-
-        {/* Project Metrics */}
-        {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          {metrics.map((metric, index) => (
-            <Card key={index}>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  {metric.title}
-                </CardTitle>
-                <metric.icon className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">
-                  {metric.value.toFixed(1)}%
-                </div>
-                <Progress value={metric.value} className="mt-2" />
-              </CardContent>
-            </Card>
-          ))}
-        </div> */}
 
         {/* Navigation Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">

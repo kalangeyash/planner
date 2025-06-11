@@ -17,7 +17,7 @@ export async function generateProjectInsights(data: ProjectData) {
   try {
     // First get frontend tech stack from our ML model
     const techStackResponse = await fetch(
-      "http://localhost:8080/api/tech-stack",
+      "https://planner-2-u8vl.onrender.com/api/tech-stack",
       {
         method: "POST",
         headers: {
