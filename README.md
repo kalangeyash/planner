@@ -14,16 +14,17 @@ A powerful web-based platform that helps developers and startups plan their soft
 
 ## ✨ Features
 
-- 🤖 **AI-Powered Planning**: Generate detailed project insights using OpenAI's GPT-4
+- 🤖 **AI-Powered Planning**: Generate detailed project insights using a combination of:
+  - Custom ML model for tech stack recommendations
+  - OpenAI's GPT-4 for comprehensive project analysis
 - 📊 **Comprehensive Analysis**: Get detailed breakdowns of:
   - Project roadmap and phases
   - System architecture with Mermaid diagrams
   - Development timeline
-  - Technology stack recommendations
+  - Technology stack recommendations (ML-powered)
   - Cost breakdown and budget allocation
   - Team structure and roles
   - Risk assessment and mitigation strategies
-
 
 - 📱 **Modern UI/UX**: Built with React, Tailwind CSS, and Framer Motion
 - 🔄 **Real-time Updates**: Save and restore project data
@@ -40,15 +41,23 @@ A powerful web-based platform that helps developers and startups plan their soft
 - OpenAI API integration
 
 ### Backend
-- Node.js + Express
+- Flask (Python) for ML model serving
+- Node.js + Express for main API
 - MongoDB for data storage
 - TypeScript for type safety
 - RESTful API architecture
+
+### ML Model
+- Scikit-learn for tech stack prediction
+- TF-IDF Vectorization
+- Random Forest Classifier
+- Joblib for model persistence
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 - Node.js (v16 or higher)
+- Python 3.8 or higher
 - MongoDB database
 - OpenAI API key
 
@@ -72,6 +81,10 @@ npm install
 # Install backend dependencies
 cd ../backend
 npm install
+
+# Install Python dependencies
+cd ../model
+pip install -r requirements.txt
 ```
 
 3. Set up environment variables:
@@ -92,7 +105,11 @@ PORT=5001
 4. Start the development servers:
 
 ```bash
-# Start backend server
+# Start ML model server
+cd model
+python3 app.py
+
+# Start backend server (in a new terminal)
 cd backend
 npm run dev:server
 
@@ -119,10 +136,21 @@ aibased-2/
 │   │   ├── routes/       # API routes
 │   │   └── server.ts     # Express server setup
 │   └── package.json
+├── model/
+│   ├── app.py           # Flask server for ML model
+│   ├── model.py         # ML model training script
+│   ├── BE-P.csv         # Training data
+│   └── requirements.txt # Python dependencies
 └── README.md
 ```
 
 ## 🔑 Key Features in Detail
+
+### ML-Powered Tech Stack Recommendations
+- Custom-trained machine learning model
+- TF-IDF based text analysis
+- Project-specific technology recommendations
+- Separate frontend, backend, database, and DevOps suggestions
 
 ### Project Planning
 - AI-generated project insights
@@ -153,6 +181,9 @@ aibased-2/
 
 ### Endpoints
 
+#### ML Model API
+- `POST /api/tech-stack` - Get ML-powered tech stack recommendations
+
 #### Projects
 - `GET /api/projects` - List all projects
 - `GET /api/projects/:id` - Get project by ID
@@ -181,6 +212,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🙏 Acknowledgments
 
 - OpenAI for providing the GPT-4 API
+- Scikit-learn for ML capabilities
 - All contributors who have helped shape this project
 - Our Contributors are Kamna Bhadoriya, Subodh Ghonge, Aryan Kadam & Yash Kalange
 

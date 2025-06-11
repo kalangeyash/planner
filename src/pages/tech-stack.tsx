@@ -16,16 +16,15 @@ export function TechStack({
   onNavigate: (page: string) => void;
   projectData: any;
 }) {
-  if (!projectData?.insights?.techStack) {
+  if (!projectData?.insights?.devStack) {
     onNavigate("form");
     return null;
   }
 
-  const { frontend, backend, database, devops } = projectData.insights.techStack;
+  const { devStack, database, devops } = projectData.insights.devStack;
 
   const categories = [
-    { name: "Frontend", items: frontend },
-    { name: "Backend", items: backend },
+    { name: "Development Stack", items: Array.isArray(devStack) ? devStack : [devStack] },
     { name: "Database", items: database },
     { name: "DevOps", items: devops },
   ];
