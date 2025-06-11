@@ -1,35 +1,36 @@
-import { motion } from 'framer-motion';
-import { ChevronRight, DollarSign } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { motion } from "framer-motion";
+import { ChevronRight, DollarSign } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
+} from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 
 export function CostBreakdown({
   onNavigate,
-  projectData
+  projectData,
 }: {
   onNavigate: (page: string) => void;
   projectData: any;
 }) {
-  if (!projectData?.insights?.costBreakdown) {
-    onNavigate('team');
+  if (!projectData?.insights?.costBreakdown || !projectData?.budget) {
+    onNavigate("form");
     return null;
   }
 
-  const { development, infrastructure, maintenance, contingency } = projectData.insights.costBreakdown;
-  const totalCost = development.amount + infrastructure.amount + maintenance.amount + contingency.amount;
+  const { development, infrastructure, maintenance, contingency } =
+    projectData.insights.costBreakdown;
+  const totalBudget = projectData.budget;
 
   const categories = [
-    { name: 'Development', data: development, color: 'bg-blue-500' },
-    { name: 'Infrastructure', data: infrastructure, color: 'bg-green-500' },
-    { name: 'Maintenance', data: maintenance, color: 'bg-purple-500' },
-    { name: 'Contingency', data: contingency, color: 'bg-orange-500' },
+    { name: "Development", data: development, color: "bg-blue-500" },
+    { name: "Infrastructure", data: infrastructure, color: "bg-green-500" },
+    { name: "Maintenance", data: maintenance, color: "bg-purple-500" },
+    { name: "Contingency", data: contingency, color: "bg-orange-500" },
   ];
 
   return (
@@ -42,14 +43,16 @@ export function CostBreakdown({
       <div className="w-full max-w-7xl py-10">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold mb-2">Cost Breakdown</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold mb-2">
+              Cost Breakdown
+            </h1>
             <p className="text-muted-foreground">
               Detailed cost analysis for {projectData.name}
             </p>
           </div>
           <div className="w-full sm:w-auto">
             <Button
-              onClick={() => onNavigate('dashboard')}
+              onClick={() => onNavigate("dashboard")}
               className="w-full sm:w-auto"
             >
               Dashboard <ChevronRight className="ml-2 h-4 w-4" />
@@ -68,7 +71,7 @@ export function CostBreakdown({
             </CardHeader>
             <CardContent>
               <div className="text-3xl sm:text-4xl font-bold mb-6">
-                ${totalCost.toLocaleString()}
+                ${totalBudget.toLocaleString()}
               </div>
               <div className="space-y-6">
                 {categories.map((category, index) => (
@@ -85,13 +88,15 @@ export function CostBreakdown({
                       </span>
                     </div>
                     <Progress
-                      value={(category.data.amount / totalCost) * 100}
+                      value={(category.data.amount / totalBudget) * 100}
                       className={category.color}
                     />
                     <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
-                      {category.data.details.map((detail: string, i: number) => (
-                        <li key={i}>• {detail}</li>
-                      ))}
+                      {category.data.details.map(
+                        (detail: string, i: number) => (
+                          <li key={i}>• {detail}</li>
+                        )
+                      )}
                     </ul>
                   </motion.div>
                 ))}

@@ -3,7 +3,6 @@ import { useEffect } from "react";
 import {
   Activity,
   BarChart2,
-  CheckCircle,
   Clock,
   Code2,
   Copy,
@@ -45,7 +44,7 @@ export function ProjectDashboard({
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen w-screen bg-background">
         <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     );
@@ -125,12 +124,6 @@ export function ProjectDashboard({
       description: "Risk analysis and mitigation",
       icon: Activity,
       route: "risks",
-    },
-    {
-      title: "Project Health",
-      description: "Project health metrics",
-      icon: CheckCircle,
-      route: "health",
     },
   ];
 
