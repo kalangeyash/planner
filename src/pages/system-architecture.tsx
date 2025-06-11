@@ -22,7 +22,6 @@ export function SystemArchitecture({
   const [diagramError, setDiagramError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Initialize Mermaid with more specific configuration
     mermaid.initialize({
       startOnLoad: true,
       theme: "default",
