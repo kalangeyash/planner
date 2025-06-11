@@ -24,7 +24,6 @@ export function TeamPlanning({
     }
   }, [projectData, onNavigate]);
 
-  // Show loading state if no team data
   if (!projectData?.insights?.team) {
     return (
       <div className="container py-10">
