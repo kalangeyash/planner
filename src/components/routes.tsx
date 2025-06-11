@@ -17,7 +17,6 @@ import { ProjectComparison } from '@/pages/project-comparison';
 import { ResourceAllocation } from '@/pages/resource-allocation';
 import { DependencyGraph } from '@/pages/dependency-graph';
 import { ProjectDocumentation } from '@/pages/project-documentation';
-import { ProjectHealth } from '@/pages/project-health';
 import { ProjectRestore } from '@/pages/project-restore';
 
 export function AppRoutes() {
@@ -48,7 +47,6 @@ export function AppRoutes() {
         <Route path="/resources" element={<ResourceAllocation {...pageProps} />} />
         <Route path="/dependencies" element={<DependencyGraph {...pageProps} />} />
         <Route path="/documentation" element={<ProjectDocumentation {...pageProps} />} />
-        <Route path="/health" element={<ProjectHealth {...pageProps} />} />
         <Route path="/restore" element={<ProjectRestore {...pageProps} />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
