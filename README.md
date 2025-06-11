@@ -211,7 +211,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- OpenAI for providing the GPT-4 API
 - Scikit-learn for ML capabilities
 - All contributors who have helped shape this project
 - Our Contributors are Kamna Bhadoriya, Subodh Ghonge, Aryan Kadam & Yash Kalange
