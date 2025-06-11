@@ -21,7 +21,7 @@ export function Timeline({
     return null;
   }
 
-  const milestones = projectData.insights.timeline.milestones ?? [];
+  const { phases } = projectData.insights.timeline;
 
   return (
     <div className="flex items-center justify-center min-h-screen w-screen bg-background">
@@ -43,37 +43,76 @@ export function Timeline({
           </div>
         </div>
 
-        <div className="relative">
-          {milestones.map((milestone: any, index: number) => (
+        <div className="space-y-8">
+          {phases.map((phase: any, phaseIndex: number) => (
             <motion.div
-              key={index}
+              key={phaseIndex}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              className="mb-8"
+              transition={{ delay: phaseIndex * 0.1 }}
             >
               <Card>
                 <CardHeader>
-                  <CardTitle>{milestone.milestone}</CardTitle>
-                  <CardDescription>{milestone.date}</CardDescription>
+                  <div>
+                    <CardTitle>{phase.name}</CardTitle>
+                    <CardDescription>{phase.duration}</CardDescription>
+                  </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-2">
-                    <p>{milestone.description}</p>
-                    <div className="text-sm text-muted-foreground">
-                      <strong>Deliverables:</strong>
-                      {Array.isArray(milestone.deliverables) &&
-                      milestone.deliverables.length > 0 ? (
-                        <ul className="list-disc list-inside mt-2">
-                          {milestone.deliverables.map(
-                            (item: string, i: number) => (
-                              <li key={i}>{item}</li>
-                            )
-                          )}
-                        </ul>
-                      ) : (
-                        <p className="mt-2 italic">No deliverables listed.</p>
-                      )}
+                  <div className="space-y-6">
+                    <p className="text-muted-foreground">{phase.description}</p>
+
+                    {/* Milestones */}
+                    <div className="space-y-4">
+                      <h3 className="font-semibold">Milestones</h3>
+                      {phase.milestones.map((milestone: any, milestoneIndex: number) => (
+                        <div
+                          key={milestoneIndex}
+                          className="border-l-2 border-primary pl-4 py-2"
+                        >
+                          <div>
+                            <h4 className="font-medium">{milestone.name}</h4>
+                            <p className="mt-1 text-sm">{milestone.description}</p>
+                            {milestone.dependencies.length > 0 && (
+                              <div className="mt-2">
+                                <p className="text-sm font-medium">Dependencies:</p>
+                                <ul className="list-disc list-inside text-sm text-muted-foreground">
+                                  {milestone.dependencies.map((dep: string, depIndex: number) => (
+                                    <li key={depIndex}>{dep}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Tasks */}
+                    <div className="space-y-4">
+                      <h3 className="font-semibold">Tasks</h3>
+                      {phase.tasks.map((task: any, taskIndex: number) => (
+                        <div
+                          key={taskIndex}
+                          className="border-l-2 border-primary pl-4 py-2"
+                        >
+                          <div>
+                            <h4 className="font-medium">{task.name}</h4>
+                            <p className="text-sm text-muted-foreground">{task.duration}</p>
+                            <p className="mt-1 text-sm">{task.description}</p>
+                            {task.dependencies.length > 0 && (
+                              <div className="mt-2">
+                                <p className="text-sm font-medium">Dependencies:</p>
+                                <ul className="list-disc list-inside text-sm text-muted-foreground">
+                                  {task.dependencies.map((dep: string, depIndex: number) => (
+                                    <li key={depIndex}>{dep}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </CardContent>

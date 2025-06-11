@@ -73,13 +73,28 @@ export async function generateProjectInsights(data: ProjectData) {
               "mermaid": "string"
             },
             "timeline": { 
-              "milestones": [
+              "phases": [
                 {
                   "name": "string",
-                  "date": "string",
-                  "description": "string"
+                  "duration": "string",
+                  "description": "string",
+                  "milestones": [
+                    {
+                      "name": "string",
+                      "description": "string",
+                      "dependencies": ["string"]
+                    }
+                  ],
+                  "tasks": [
+                    {
+                      "name": "string",
+                      "duration": "string",
+                      "description": "string",
+                      "dependencies": ["string"]
+                    }
+                  ]
                 }
-              ] 
+              ]
             },
             "techStack": { 
               "database": ["string"], 
