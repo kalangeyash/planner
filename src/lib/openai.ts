@@ -15,6 +15,22 @@ export type ProjectData = {
 
 export async function generateProjectInsights(data: ProjectData) {
   try {
+    // First get frontend tech stack from our ML model
+    const techStackResponse = await fetch('http://localhost:8080/api/tech-stack', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!techStackResponse.ok) {
+      throw new Error('Failed to get tech stack recommendations');
+    }
+
+    const mlTechStack = await techStackResponse.json();
+
+    // Then get other insights from OpenAI
     const response = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
@@ -63,8 +79,6 @@ The JSON should follow this exact structure:
     ] 
   },
   "techStack": { 
-    "frontend": ["string"], 
-    "backend": ["string"], 
     "database": ["string"], 
     "devops": ["string"] 
   },
@@ -126,8 +140,15 @@ Provide the analysis in the specified JSON format.`
     try {
       const insights = JSON.parse(messageContent);
       
+      // Combine ML model's frontend prediction with OpenAI's other recommendations
+      insights.devStack = {
+        devStack: mlTechStack.techStack.frontend,
+        database: insights.techStack.database,
+        devops: insights.techStack.devops
+      };
+      
       // Validate the insights structure
-      if (!insights.architecture || !insights.roadmap || !insights.techStack) {
+      if (!insights.architecture || !insights.roadmap || !insights.devStack) {
         throw new Error('Invalid insights structure: missing required fields');
       }
       
