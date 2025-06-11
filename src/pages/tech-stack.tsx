@@ -16,17 +16,20 @@ export function TechStack({
   onNavigate: (page: string) => void;
   projectData: any;
 }) {
-  if (!projectData?.insights?.devStack) {
+  if (!projectData?.insights?.techStack) {
     onNavigate("form");
     return null;
   }
 
-  const { devStack, database, devops } = projectData.insights.devStack;
+  const { frontend, database, devops } = projectData.insights.techStack;
 
   const categories = [
-    { name: "Development Stack", items: Array.isArray(devStack) ? devStack : [devStack] },
-    { name: "Database", items: database },
-    { name: "DevOps", items: devops },
+    {
+      name: "Development Stack",
+      items: Array.isArray(frontend) ? frontend : [frontend],
+    },
+    { name: "Database", items: database || [] },
+    { name: "DevOps", items: devops || [] },
   ];
 
   return (
@@ -48,7 +51,9 @@ export function TechStack({
             {/* <Button variant="outline" onClick={() => onNavigate("timeline")}>
               Back to Timeline
             </Button> */}
-            <Button onClick={() => onNavigate("dashboard")}>Dashboard <ChevronRight className="ml-2 h-4 w-4" /></Button>
+            <Button onClick={() => onNavigate("dashboard")}>
+              Dashboard <ChevronRight className="ml-2 h-4 w-4" />
+            </Button>
           </div>
         </div>
 

@@ -1,4 +1,4 @@
-import OpenAI from 'openai';
+import OpenAI from "openai";
 
 export const openai = new OpenAI({
   apiKey: import.meta.env.VITE_OPENAI_API_KEY,
@@ -16,16 +16,19 @@ export type ProjectData = {
 export async function generateProjectInsights(data: ProjectData) {
   try {
     // First get frontend tech stack from our ML model
-    const techStackResponse = await fetch('http://localhost:8080/api/tech-stack', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
+    const techStackResponse = await fetch(
+      "http://localhost:8080/api/tech-stack",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    );
 
     if (!techStackResponse.ok) {
-      throw new Error('Failed to get tech stack recommendations');
+      throw new Error("Failed to get tech stack recommendations");
     }
 
     const mlTechStack = await techStackResponse.json();
@@ -113,53 +116,53 @@ graph TD
   A[Component A] --> B[Component B]
   B --> C[Component C]
 
-Remember: Return ONLY the JSON object, no additional text or explanation.`
+Remember: Return ONLY the JSON object, no additional text or explanation.`,
         },
         {
           role: "user",
           content: `Project Name: ${data.name}
 Description: ${data.description}
-Requirements: ${data.requirements.join(', ')}
+Requirements: ${data.requirements.join(", ")}
 Industry: ${data.industry}
 Budget: $${data.budget}
 
-Provide the analysis in the specified JSON format.`
-        }
+Provide the analysis in the specified JSON format.`,
+        },
       ],
       temperature: 0.7,
       max_tokens: 3500,
-      response_format: { type: "json_object" }
+      response_format: { type: "json_object" },
     });
 
     const messageContent = response.choices[0]?.message?.content;
 
     if (!messageContent) {
-      throw new Error('No content received from OpenAI');
+      throw new Error("No content received from OpenAI");
     }
 
     try {
       const insights = JSON.parse(messageContent);
-      
+
       // Combine ML model's frontend prediction with OpenAI's other recommendations
-      insights.devStack = {
-        devStack: mlTechStack.techStack.frontend,
+      insights.techStack = {
+        frontend: mlTechStack.techStack.devStack,
         database: insights.techStack.database,
-        devops: insights.techStack.devops
+        devops: insights.techStack.devops,
       };
-      
+
       // Validate the insights structure
-      if (!insights.architecture || !insights.roadmap || !insights.devStack) {
-        throw new Error('Invalid insights structure: missing required fields');
+      if (!insights.architecture || !insights.roadmap || !insights.techStack) {
+        throw new Error("Invalid insights structure: missing required fields");
       }
-      
+
       return insights;
     } catch (error) {
-      console.error('Failed to parse JSON from OpenAI response:', error);
-      console.error('Received content:', messageContent);
-      throw new Error('Invalid JSON structure in OpenAI response');
+      console.error("Failed to parse JSON from OpenAI response:", error);
+      console.error("Received content:", messageContent);
+      throw new Error("Invalid JSON structure in OpenAI response");
     }
   } catch (error) {
-    console.error('Error generating project insights:', error);
+    console.error("Error generating project insights:", error);
     throw error;
   }
 }
