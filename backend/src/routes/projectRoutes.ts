@@ -1,5 +1,5 @@
 import express, { Router, Request, Response, RequestHandler } from 'express';
-import { Project } from '../models/Project.js';
+import Project from '../models/Project.js';
 
 interface ProjectRequest extends Request {
   params: {
@@ -20,11 +20,12 @@ const getAllProjects: RequestHandler = async (req: Request, res: Response) => {
 };
 
 // Get a single project
-const getProject: RequestHandler = async (req: Request, res: Response) => {
+const getProject: RequestHandler = async (req: Request, res: Response): Promise<void> => {
   try {
     const project = await Project.findOne({ projectId: req.params.projectId });
     if (!project) {
-      return res.status(404).json({ success: false, error: 'Project not found' });
+      res.status(404).json({ success: false, error: 'Project not found' });
+      return;
     }
     res.json({ success: true, project });
   } catch (error) {
