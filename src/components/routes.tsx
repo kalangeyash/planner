@@ -10,13 +10,8 @@ import { SystemArchitecture } from '@/pages/system-architecture';
 import { Timeline } from '@/pages/timeline';
 import { TechStack } from '@/pages/tech-stack';
 import { CostBreakdown } from '@/pages/cost-breakdown';
-import { TeamPlanning } from '@/pages/team-planning';
 import { RiskAssessment } from '@/pages/risk-assessment';
 import { ProjectDashboard } from '@/pages/project-dashboard';
-import { ProjectComparison } from '@/pages/project-comparison';
-import { ResourceAllocation } from '@/pages/resource-allocation';
-import { DependencyGraph } from '@/pages/dependency-graph';
-import { ProjectDocumentation } from '@/pages/project-documentation';
 import { ProjectRestore } from '@/pages/project-restore';
 
 export function AppRoutes() {
@@ -40,13 +35,8 @@ export function AppRoutes() {
         <Route path="/timeline" element={<Timeline {...pageProps} />} />
         <Route path="/techstack" element={<TechStack {...pageProps} />} />
         <Route path="/costs" element={<CostBreakdown {...pageProps} />} />
-        <Route path="/team" element={<TeamPlanning {...pageProps} />} />
         <Route path="/risks" element={<RiskAssessment {...pageProps} />} />
         <Route path="/dashboard" element={<ProjectDashboard {...pageProps} />} />
-        <Route path="/comparison" element={<ProjectComparison {...pageProps} />} />
-        <Route path="/resources" element={<ResourceAllocation {...pageProps} />} />
-        <Route path="/dependencies" element={<DependencyGraph {...pageProps} />} />
-        <Route path="/documentation" element={<ProjectDocumentation {...pageProps} />} />
         <Route path="/restore" element={<ProjectRestore {...pageProps} />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
