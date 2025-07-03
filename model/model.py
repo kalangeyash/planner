@@ -3,7 +3,7 @@ import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score,precision_score, recall_score, f1_score
 from sklearn.ensemble import RandomForestClassifier
 from scipy.sparse import csr_matrix
 from sklearn.pipeline import Pipeline
@@ -58,8 +58,7 @@ for i in range(4):
 
 # Evaluate the model
 y_pred = model.predict(X_test)
-accuracy = accuracy_score(y_test, y_pred)
-print(f"Accuracy of the optimized model: {accuracy * 100:.2f}%")
+
 
 # Function to recommend tech stack
 def recommend_tech_stack(project_data):
@@ -80,4 +79,4 @@ industry = "E-Learning"
 budget = "50000"
 
 recommendations = recommend_tech_stack([project_name, description, requirements, industry, budget])
-print(f"🔮 Recommended Tech Stack: {recommendations}")
+print(f" Recommended Tech Stack: {recommendations}")
