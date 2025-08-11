@@ -5,6 +5,7 @@ import { ProjectProvider } from '@/context/ProjectContext';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { StrictMode } from 'react';
 
+
 function App() {
   return (
     <StrictMode>
