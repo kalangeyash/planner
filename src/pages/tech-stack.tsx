@@ -21,13 +21,14 @@ export function TechStack({
     return null;
   }
 
-  const { frontend, database, devops } = projectData.insights.techStack;
+  const { frontend,backend, database, devops } = projectData.insights.techStack;
 
   const categories = [
     {
       name: "Development Stack",
       items: Array.isArray(frontend) ? frontend : [frontend],
     },
+    {name:"Backend",items:backend || []},
     { name: "Database", items: database || [] },
     { name: "DevOps", items: devops || [] },
   ];

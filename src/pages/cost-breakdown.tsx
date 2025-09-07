@@ -22,7 +22,9 @@ export function CostBreakdown({
     return null;
   }
 
-  const { development, infrastructure, maintenance, contingency } =
+  const { development, infrastructure, maintenance,
+    // contingency
+  } =
     projectData.insights.costBreakdown;
   const totalBudget = projectData.budget;
 
@@ -30,7 +32,7 @@ export function CostBreakdown({
     { name: "Development", data: development, color: "bg-blue-500" },
     { name: "Infrastructure", data: infrastructure, color: "bg-green-500" },
     { name: "Maintenance", data: maintenance, color: "bg-purple-500" },
-    { name: "Contingency", data: contingency, color: "bg-orange-500" },
+    // { name: "Contingency", data: contingency, color: "bg-orange-500" },
   ];
 
   return (

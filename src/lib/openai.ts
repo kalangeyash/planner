@@ -80,6 +80,7 @@ export async function generateProjectInsights(data: ProjectData) {
             },
             "techStack": { 
               "frontend": ["string"],
+              "backend": ["string"],
               "database": ["string"], 
               "devops": ["string"] 
             },
