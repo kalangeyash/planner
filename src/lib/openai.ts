@@ -15,25 +15,7 @@ export type ProjectData = {
 
 export async function generateProjectInsights(data: ProjectData) {
   try {
-    // First get frontend tech stack from our ML model
-    const techStackResponse = await fetch(
-      "https://planner-2-u8vl.onrender.com/api/tech-stack",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }
-    );
-
-    if (!techStackResponse.ok) {
-      throw new Error("Failed to get tech stack recommendations");
-    }
-
-    const mlTechStack = await techStackResponse.json();
-
-    // Then get other insights from OpenAI
+    // Get all insights from OpenAI including tech stack
     const response = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
@@ -97,6 +79,7 @@ export async function generateProjectInsights(data: ProjectData) {
               ]
             },
             "techStack": { 
+              "frontend": ["string"],
               "database": ["string"], 
               "devops": ["string"] 
             },
@@ -158,12 +141,8 @@ export async function generateProjectInsights(data: ProjectData) {
     try {
       const insights = JSON.parse(messageContent);
 
-      // Combine ML model's frontend prediction with OpenAI's other recommendations
-      insights.techStack = {
-        frontend: mlTechStack.techStack.devStack,
-        database: insights.techStack.database,
-        devops: insights.techStack.devops,
-      };
+      // Use API response for all tech stack recommendations
+      // insights.techStack already contains frontend, database, and devops from the API
 
       // Validate the insights structure
       if (!insights.architecture || !insights.roadmap || !insights.techStack) {
